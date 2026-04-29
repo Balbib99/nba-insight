@@ -13,11 +13,22 @@ Live demo: _Coming soon_
 Add screenshots after deployment:
 
 - Home / landing page
+<img width="1900" height="907" alt="image" src="https://github.com/user-attachments/assets/acbb67df-6a5b-44e4-bb08-4c146246df9a" />
+
 - Players directory
+<img width="1897" height="906" alt="image" src="https://github.com/user-attachments/assets/f64b624d-650c-4365-82d6-3056c331decc" />
+
 - Player detail
+<img width="1893" height="904" alt="image" src="https://github.com/user-attachments/assets/a1309522-d5a8-42cc-b04a-96fc5e235c18" />
+
 - Team detail
+<img width="1895" height="906" alt="image" src="https://github.com/user-attachments/assets/71b53865-d441-4450-96a6-888779e1ac9d" />
+
 - Analytics dashboard
+<img width="1894" height="904" alt="image" src="https://github.com/user-attachments/assets/52b84369-9090-4bc4-853c-b3dbf9313fb1" />
+
 - Player comparison
+<img width="1889" height="899" alt="image" src="https://github.com/user-attachments/assets/a1005113-b870-44d9-bc8f-af94cc5d45ee" />
 
 ## Features
 
