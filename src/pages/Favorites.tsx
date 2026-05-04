@@ -1,9 +1,9 @@
-import { Heart, Trash2, UserRound } from 'lucide-react';
+import { AlertCircle, Heart, Loader2, Trash2, UserRound } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useFavorites } from '../context/useFavorites';
 
 export function Favorites() {
-  const { favorites, removeFavorite } = useFavorites();
+  const { error, favorites, isLoading, removeFavorite } = useFavorites();
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
@@ -29,7 +29,28 @@ export function Favorites() {
         </div>
       </div>
 
-      {favorites.length === 0 ? (
+      {isLoading ? (
+        <div className="mt-8 flex min-h-64 items-center justify-center rounded-lg border border-white/10 bg-zinc-900/70">
+          <div className="flex items-center gap-3 text-sm font-medium text-zinc-300">
+            <Loader2 className="size-5 animate-spin text-red-300" aria-hidden="true" />
+            Loading favorites
+          </div>
+        </div>
+      ) : null}
+
+      {error ? (
+        <div className="mt-8 rounded-lg border border-red-400/30 bg-red-500/10 p-5 text-sm text-red-100">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="mt-0.5 size-5 shrink-0" aria-hidden="true" />
+            <div>
+              <h2 className="font-semibold text-white">Unable to sync favorites</h2>
+              <p className="mt-1 text-red-100/80">{error}</p>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {!isLoading && favorites.length === 0 ? (
         <div className="mt-8 rounded-lg border border-white/10 bg-zinc-900/70 p-8 text-center">
           <div className="mx-auto flex size-12 items-center justify-center rounded-lg bg-red-500/15 text-red-300">
             <Heart className="size-6" aria-hidden="true" />
@@ -45,7 +66,9 @@ export function Favorites() {
             Browse players
           </Link>
         </div>
-      ) : (
+      ) : null}
+
+      {!isLoading && favorites.length > 0 ? (
         <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {favorites.map((player) => (
             <article
@@ -62,7 +85,9 @@ export function Favorites() {
                   type="button"
                   aria-label={`Remove ${player.fullName} from favorites`}
                   title="Remove favorite"
-                  onClick={() => removeFavorite(player.id)}
+                  onClick={() => {
+                    void removeFavorite(player.id);
+                  }}
                 >
                   <Trash2 className="size-5" aria-hidden="true" />
                 </button>
@@ -87,7 +112,7 @@ export function Favorites() {
             </article>
           ))}
         </div>
-      )}
+      ) : null}
     </section>
   );
 }

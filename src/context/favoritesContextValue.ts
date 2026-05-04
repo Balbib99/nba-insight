@@ -3,8 +3,10 @@ import type { Player } from '../types/player';
 
 export interface FavoritesContextValue {
   favorites: Player[];
-  addFavorite: (player: Player) => void;
-  removeFavorite: (playerId: string) => void;
+  isLoading: boolean;
+  error: string | null;
+  addFavorite: (player: Player) => Promise<void>;
+  removeFavorite: (playerId: string) => Promise<void>;
   isFavorite: (playerId: string) => boolean;
 }
 
