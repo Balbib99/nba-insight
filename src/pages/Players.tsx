@@ -1,5 +1,6 @@
 import { AlertCircle, Loader2, RotateCcw } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
+import { DataSourceBadge } from '../components/DataSourceBadge';
 import { PlayerCard } from '../components/PlayerCard';
 import { SearchInput } from '../components/SearchInput';
 import { SelectFilter, type SelectOption } from '../components/SelectFilter';
@@ -103,9 +104,12 @@ export function Players() {
             Explore a curated mock player dataset through the same service layer that can later connect to a real NBA API.
           </p>
         </div>
-        <span className="w-fit rounded-full border border-white/10 px-3 py-1 text-sm font-medium text-zinc-300">
-          {isLoading ? 'Loading players' : `${filteredPlayers.length} of ${players.length} players`}
-        </span>
+        <div className="flex flex-wrap items-center gap-2">
+          <DataSourceBadge source="mock" />
+          <span className="w-fit rounded-full border border-white/10 px-3 py-1 text-sm font-medium text-zinc-300">
+            {isLoading ? 'Loading players' : `${filteredPlayers.length} of ${players.length} players`}
+          </span>
+        </div>
       </div>
 
       <div className="mt-8 rounded-lg border border-white/10 bg-white/[0.03] p-4 shadow-xl shadow-black/20">

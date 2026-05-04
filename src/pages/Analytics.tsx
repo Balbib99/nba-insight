@@ -1,5 +1,6 @@
 import { AlertCircle, Brain, Clock3, Flame, Gauge, Loader2, Target, TrendingUp } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
+import { DataSourceBadge } from '../components/DataSourceBadge';
 import { InsightCard } from '../components/InsightCard';
 import { SectionTitle } from '../components/SectionTitle';
 import { StatsTable } from '../components/StatsTable';
@@ -103,7 +104,10 @@ export function Analytics() {
           <div className="relative px-5 py-8 sm:px-8 lg:px-10">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <p className="text-sm font-medium text-red-300">Analytics</p>
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="text-sm font-medium text-red-300">Analytics</p>
+                  <DataSourceBadge source="mock" />
+                </div>
                 <h1 className="mt-3 text-4xl font-bold tracking-normal text-white sm:text-5xl">
                   NBA Analytics Dashboard
                 </h1>

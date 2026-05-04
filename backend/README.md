@@ -68,6 +68,10 @@ npm start
 | GET | `/api/favorites/:userId` | Lista de `playerId` favoritos desde PostgreSQL |
 | POST | `/api/favorites/:userId` | Añade favorito con body `{ "playerId": "lebron-james" }` |
 | DELETE | `/api/favorites/:userId/:playerId` | Elimina favorito |
+| GET | `/api/real/health` | Comprueba conexión con el microservicio Python |
+| GET | `/api/real/league-leaders` | Líderes reales desde `nba_api` vía Python |
+| GET | `/api/real/player-gamelog/:playerId` | Game log real de un jugador vía Python |
+| GET | `/api/real/team-details/:teamId` | Detalles reales de equipo vía Python |
 
 ## Probar favoritos
 
@@ -75,4 +79,21 @@ npm start
 curl http://localhost:4000/api/favorites/demo-user
 curl -X POST http://localhost:4000/api/favorites/demo-user -H "Content-Type: application/json" -d "{\"playerId\":\"lebron-james\"}"
 curl -X DELETE http://localhost:4000/api/favorites/demo-user/lebron-james
+```
+
+## Microservicio Python nba_api
+
+Configura la URL del servicio Python en `backend/.env`:
+
+```env
+PYTHON_NBA_SERVICE_URL=http://localhost:8000
+```
+
+Con `nba-service` levantado en el puerto `8000`, puedes probar la integración desde Node:
+
+```bash
+curl http://localhost:4000/api/real/health
+curl "http://localhost:4000/api/real/league-leaders?season=2024-25&stat=PTS&season_type=Regular%20Season"
+curl "http://localhost:4000/api/real/player-gamelog/2544?season=2024-25&season_type=Regular%20Season"
+curl http://localhost:4000/api/real/team-details/1610612747
 ```

@@ -2,6 +2,7 @@ import { AlertCircle, ArrowRightLeft, Loader2, Scale, UserRound } from 'lucide-r
 import { useEffect, useMemo, useState } from 'react';
 import { ComparisonSummary } from '../components/ComparisonSummary';
 import { ComparisonTable, type ComparisonMetric } from '../components/ComparisonTable';
+import { DataSourceBadge } from '../components/DataSourceBadge';
 import { FavoriteButton } from '../components/FavoriteButton';
 import { PlayerSelector } from '../components/PlayerSelector';
 import { getPlayers, getStatsByPlayerId } from '../services/nbaService';
@@ -204,7 +205,10 @@ export function Compare() {
         <div className="relative">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(220,38,38,0.26),_transparent_34%),linear-gradient(135deg,_rgba(39,39,42,0.96),_rgba(9,9,11,1)_65%)]" />
           <div className="relative px-5 py-8 sm:px-8 lg:px-10">
-            <p className="text-sm font-medium text-red-300">Compare</p>
+            <div className="flex flex-wrap items-center gap-2">
+              <p className="text-sm font-medium text-red-300">Compare</p>
+              <DataSourceBadge source="mock" />
+            </div>
             <h1 className="mt-3 text-4xl font-bold tracking-normal text-white sm:text-5xl">
               Player Comparison Lab
             </h1>

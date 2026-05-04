@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { DataSourceBadge } from '../components/DataSourceBadge';
 import { getPlayersByTeamId, getTeamById, getTeamStatsById } from '../services/nbaService';
 import type { Player } from '../types/player';
 import type { Team } from '../types/team';
@@ -203,7 +204,10 @@ export function TeamDetail() {
           <div className="relative px-5 py-8 sm:px-8 lg:px-10">
             <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <p className="text-sm font-medium text-red-300">{team.city}</p>
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="text-sm font-medium text-red-300">{team.city}</p>
+                  <DataSourceBadge source="mock" />
+                </div>
                 <h1 className="mt-3 text-4xl font-bold tracking-normal text-white sm:text-5xl">
                   {team.fullName}
                 </h1>

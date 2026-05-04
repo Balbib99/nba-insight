@@ -1,5 +1,6 @@
 import { AlertCircle, Loader2, RotateCcw } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
+import { DataSourceBadge } from '../components/DataSourceBadge';
 import { SearchInput } from '../components/SearchInput';
 import { SelectFilter, type SelectOption } from '../components/SelectFilter';
 import { TeamCard } from '../components/TeamCard';
@@ -98,9 +99,12 @@ export function TeamsPage() {
             Search and filter the full mock dataset through a service layer prepared for real NBA data.
           </p>
         </div>
-        <span className="w-fit rounded-full border border-white/10 px-3 py-1 text-sm font-medium text-zinc-300">
-          {isLoading ? 'Loading teams' : `${filteredTeams.length} of ${teams.length} teams`}
-        </span>
+        <div className="flex flex-wrap items-center gap-2">
+          <DataSourceBadge source="mock" />
+          <span className="w-fit rounded-full border border-white/10 px-3 py-1 text-sm font-medium text-zinc-300">
+            {isLoading ? 'Loading teams' : `${filteredTeams.length} of ${teams.length} teams`}
+          </span>
+        </div>
       </div>
 
       <div className="mt-8 rounded-lg border border-white/10 bg-white/[0.03] p-4 shadow-xl shadow-black/20">
