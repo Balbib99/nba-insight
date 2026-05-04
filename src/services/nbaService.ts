@@ -5,11 +5,11 @@ import type { PlayerStats } from '../types/playerStats';
 import type { Team } from '../types/team';
 import type { TeamStats } from '../types/teamStats';
 
-async function fetchFromApi<T>(endpoint: string): Promise<T> {
+async function fetchFromApi<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, options);
 
     if (!response.ok) {
       throw new Error(`Request failed with status ${response.status}`);
@@ -82,6 +82,26 @@ export async function getPlayerStats(): Promise<PlayerStats[]> {
 
 export async function getStatsByPlayerId(id: string): Promise<PlayerStats | undefined> {
   return fetchOptionalFromApi<PlayerStats>(`/api/stats/players/${id}`);
+}
+
+export async function getFavorites(userId: string): Promise<string[]> {
+  return fetchFromApi<string[]>(`/api/favorites/${userId}`);
+}
+
+export async function addFavorite(userId: string, playerId: string): Promise<string[]> {
+  return fetchFromApi<string[]>(`/api/favorites/${userId}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ playerId }),
+  });
+}
+
+export async function removeFavorite(userId: string, playerId: string): Promise<string[]> {
+  return fetchFromApi<string[]>(`/api/favorites/${userId}/${playerId}`, {
+    method: 'DELETE',
+  });
 }
 
 export async function getTeamStatsById(teamId: string): Promise<TeamStats | undefined> {

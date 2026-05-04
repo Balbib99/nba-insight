@@ -8,16 +8,16 @@ interface FavoriteButtonProps {
 }
 
 export function FavoriteButton({ player, variant = 'icon' }: FavoriteButtonProps) {
-  const { addFavorite, isFavorite, removeFavorite } = useFavorites();
+  const { addFavorite, isFavorite, isLoading, removeFavorite } = useFavorites();
   const active = isFavorite(player.id);
 
   function toggleFavorite() {
     if (active) {
-      removeFavorite(player.id);
+      void removeFavorite(player.id);
       return;
     }
 
-    addFavorite(player);
+    void addFavorite(player);
   }
 
   if (variant === 'full') {
@@ -29,6 +29,7 @@ export function FavoriteButton({ player, variant = 'icon' }: FavoriteButtonProps
             : 'border-white/10 bg-white/[0.06] text-zinc-200 hover:bg-white/10 hover:text-white'
         }`}
         type="button"
+        disabled={isLoading}
         onClick={toggleFavorite}
       >
         <Heart className={`size-4 ${active ? 'fill-current' : ''}`} aria-hidden="true" />
@@ -45,6 +46,7 @@ export function FavoriteButton({ player, variant = 'icon' }: FavoriteButtonProps
           : 'border-white/10 bg-white/[0.06] text-zinc-300 hover:bg-white/10 hover:text-white'
       }`}
       type="button"
+      disabled={isLoading}
       aria-label={active ? `Remove ${player.fullName} from favorites` : `Add ${player.fullName} to favorites`}
       title={active ? 'Remove favorite' : 'Add favorite'}
       onClick={toggleFavorite}

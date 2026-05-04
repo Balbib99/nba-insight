@@ -1,6 +1,7 @@
 import cors from 'cors';
 import express from 'express';
 
+import favoritesRouter from './routes/favoritesRoutes.js';
 import playersRouter from './routes/players.routes.js';
 import statsRouter from './routes/stats.routes.js';
 import teamsRouter from './routes/teams.routes.js';
@@ -23,6 +24,7 @@ app.get('/api/health', (_req, res) => {
 app.use('/api/teams', teamsRouter);
 app.use('/api/players', playersRouter);
 app.use('/api/stats', statsRouter);
+app.use('/api/favorites', favoritesRouter);
 
 app.use((_req, res) => {
   res.status(404).json({ message: 'Route not found' });
