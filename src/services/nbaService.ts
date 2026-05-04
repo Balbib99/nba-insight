@@ -2,8 +2,15 @@ import { mockTeamStats } from '../data/mockTeamStats';
 import { API_BASE_URL } from '../config/api';
 import type { Player } from '../types/player';
 import type { PlayerStats } from '../types/playerStats';
+import type { RealLeagueLeader } from '../types/realLeagueLeader';
 import type { Team } from '../types/team';
 import type { TeamStats } from '../types/teamStats';
+
+export interface RealLeagueLeadersParams {
+  season?: string;
+  stat?: string;
+  season_type?: string;
+}
 
 async function fetchFromApi<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
@@ -82,6 +89,30 @@ export async function getPlayerStats(): Promise<PlayerStats[]> {
 
 export async function getStatsByPlayerId(id: string): Promise<PlayerStats | undefined> {
   return fetchOptionalFromApi<PlayerStats>(`/api/stats/players/${id}`);
+}
+
+export async function getRealLeagueLeaders(
+  params: RealLeagueLeadersParams = {},
+): Promise<RealLeagueLeader[]> {
+  const searchParams = new URLSearchParams();
+
+  if (params.season) {
+    searchParams.set('season', params.season);
+  }
+
+  if (params.stat) {
+    searchParams.set('stat', params.stat);
+  }
+
+  if (params.season_type) {
+    searchParams.set('season_type', params.season_type);
+  }
+
+  const queryString = searchParams.toString();
+
+  return fetchFromApi<RealLeagueLeader[]>(
+    `/api/real/league-leaders${queryString ? `?${queryString}` : ''}`,
+  );
 }
 
 export async function getFavorites(userId: string): Promise<string[]> {
