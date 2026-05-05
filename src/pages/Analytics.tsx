@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { DataSourceBadge } from '../components/DataSourceBadge';
+import { DataModeBadge } from '../components/DataModeBadge';
 import { InsightCard } from '../components/InsightCard';
 import { SectionTitle } from '../components/SectionTitle';
 import { SelectFilter, type SelectOption } from '../components/SelectFilter';
@@ -185,7 +186,7 @@ export function Analytics() {
       } catch {
         if (isMounted) {
           setRealLeaders([]);
-          setRealError('Real NBA data is temporarily unavailable.');
+          setRealError('Live data is currently unavailable. Showing demo data so the portfolio experience remains available.');
         }
       } finally {
         if (isMounted) {
@@ -240,6 +241,7 @@ export function Analytics() {
                   <span className="inline-flex h-7 items-center rounded-lg border border-emerald-300/30 bg-emerald-400/10 px-2.5 text-xs font-semibold text-emerald-100">
                     Powered by nba_api
                   </span>
+                  <DataModeBadge />
                 </div>
                 <h1 className="mt-3 text-4xl font-bold tracking-normal text-white sm:text-5xl">
                   NBA Analytics Dashboard
@@ -328,9 +330,9 @@ export function Analytics() {
             <div className="flex items-start gap-3">
               <AlertCircle className="mt-0.5 size-5 shrink-0" aria-hidden="true" />
               <div>
-                <h3 className="font-semibold text-white">Real NBA data is temporarily unavailable.</h3>
+                <h3 className="font-semibold text-white">Live data fallback active.</h3>
                 <p className="mt-1 text-red-100/80">
-                  The demo analytics sections below remain available while the live feed recovers.
+                  Live data is currently unavailable. Showing demo data so the portfolio experience remains available.
                 </p>
               </div>
             </div>

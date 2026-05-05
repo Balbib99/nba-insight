@@ -1,5 +1,6 @@
 import { ArrowRightLeft, CalendarClock, Crown, Info, Medal, Trophy } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { DataModeBadge } from '../components/DataModeBadge';
 import { SelectFilter, type SelectOption } from '../components/SelectFilter';
 import { playoffBrackets, type PlayoffSeries } from '../data/playoffBrackets';
 import { seasonChampions } from '../data/seasonChampions';
@@ -227,6 +228,7 @@ export function Playoffs() {
                   <span className="inline-flex h-7 items-center rounded-lg border border-white/10 bg-white/[0.05] px-2.5 text-xs font-semibold text-zinc-200">
                     Historical local data
                   </span>
+                  <DataModeBadge mode="mock" />
                 </div>
                 <h1 className="mt-3 text-4xl font-bold tracking-normal text-white sm:text-5xl">
                   {season} Playoffs

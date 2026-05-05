@@ -1,5 +1,6 @@
 import { AlertCircle, CheckCircle2, GitBranch, Loader2, Table2, Trophy } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
+import { DataModeBadge } from '../components/DataModeBadge';
 import { SelectFilter, type SelectOption } from '../components/SelectFilter';
 import { playoffBrackets, type PlayoffSeries } from '../data/playoffBrackets';
 import { seasonChampions } from '../data/seasonChampions';
@@ -286,7 +287,7 @@ export function Standings() {
       } catch {
         if (isMounted) {
           setStandings([]);
-          setError('Real standings are temporarily unavailable.');
+          setError('Live standings are currently unavailable. Showing demo standings when fallback data is available.');
         }
       } finally {
         if (isMounted) {
@@ -324,6 +325,7 @@ export function Standings() {
                   <span className="inline-flex h-7 items-center rounded-lg border border-emerald-300/30 bg-emerald-400/10 px-2.5 text-xs font-semibold text-emerald-100">
                     Powered by API-Sports
                   </span>
+                  <DataModeBadge />
                 </div>
                 <h1 className="mt-3 text-4xl font-bold tracking-normal text-white sm:text-5xl">
                   NBA Standings
@@ -391,9 +393,9 @@ export function Standings() {
           <div className="flex items-start gap-3">
             <AlertCircle className="mt-0.5 size-5 shrink-0" aria-hidden="true" />
             <div>
-              <h2 className="font-semibold text-white">Real standings are temporarily unavailable.</h2>
+              <h2 className="font-semibold text-white">Live standings are temporarily unavailable.</h2>
               <p className="mt-1 text-red-100/80">
-                The rest of NBA Insight remains available while the live standings feed recovers.
+                NBA Insight can continue with demo or cached data depending on the selected data mode.
               </p>
             </div>
           </div>

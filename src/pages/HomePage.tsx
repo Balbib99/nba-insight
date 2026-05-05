@@ -15,6 +15,7 @@ import {
   Users,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { DataModeBadge } from '../components/DataModeBadge';
 
 const demonstrations = [
   {
@@ -94,6 +95,15 @@ const roadmap = [
   'Advanced player trends',
 ];
 
+const architectureStatus = [
+  'Frontend deployed on Vercel from the stable main branch',
+  'Backend Node/Express prepared for cloud deployment',
+  'PostgreSQL used locally for favorites and cache',
+  'API-BASKETBALL used through backend only',
+  'nba_api used through Python service only',
+  'Public demo supports mock/hybrid data mode',
+];
+
 function SectionHeading({
   eyebrow,
   title,
@@ -120,10 +130,13 @@ export function HomePage() {
         <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
           <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-lg border border-red-400/30 bg-red-500/10 px-3 py-1 text-sm font-semibold text-red-100">
-                <BarChart3 className="size-4" aria-hidden="true" />
-                Full-stack NBA analytics platform
-              </div>
+                <div className="inline-flex items-center gap-2 rounded-lg border border-red-400/30 bg-red-500/10 px-3 py-1 text-sm font-semibold text-red-100">
+                  <BarChart3 className="size-4" aria-hidden="true" />
+                  Full-stack NBA analytics platform
+                </div>
+                <div className="mt-4">
+                  <DataModeBadge variant="full" />
+                </div>
               <h1 className="mt-6 max-w-4xl text-5xl font-bold tracking-normal text-white sm:text-6xl lg:text-7xl">
                 NBA Insight
               </h1>
@@ -282,6 +295,24 @@ export function HomePage() {
       </section>
 
       <section className="border-y border-white/10 bg-zinc-900/30">
+        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:px-8">
+          <SectionHeading
+            eyebrow="Current Architecture Status"
+            title="Ready for staged production deployment"
+            description="The frontend can run independently today, while backend services remain isolated for the next cloud deployment phase."
+          />
+          <div className="grid gap-3 sm:grid-cols-2">
+            {architectureStatus.map((item) => (
+              <div key={item} className="flex items-start gap-3 rounded-lg border border-white/10 bg-zinc-950/70 p-4">
+                <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-emerald-200" aria-hidden="true" />
+                <p className="text-sm leading-6 text-zinc-300">{item}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section>
         <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 lg:grid-cols-2 lg:px-8">
           <div>
             <SectionHeading

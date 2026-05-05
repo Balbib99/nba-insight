@@ -1,70 +1,98 @@
 # NBA Insight
 
-NBA Insight is a modern basketball analytics dashboard built as a frontend portfolio MVP with React, Vite, TypeScript, Tailwind CSS and React Router.
+NBA Insight is a full-stack NBA analytics platform built as a professional portfolio project.
 
-The application currently uses mock NBA data through a service layer. This keeps the UI, routing, comparison logic, favorites flow and analytics structure easy to validate before replacing the data source with a real NBA API.
+It combines a React/Vite frontend, a Node/Express API gateway, PostgreSQL persistence/cache, and a Python FastAPI microservice for `nba_api` workflows. The frontend is designed to run safely in public demos before the full backend stack is deployed.
 
-## Demo
+## Stack
 
-Live demo: _Coming soon_
-
-## Screenshots
-
-Add screenshots after deployment:
-
-- Home / landing page
-<img width="1900" height="907" alt="image" src="https://github.com/user-attachments/assets/acbb67df-6a5b-44e4-bb08-4c146246df9a" />
-
-- Players directory
-<img width="1897" height="906" alt="image" src="https://github.com/user-attachments/assets/f64b624d-650c-4365-82d6-3056c331decc" />
-
-- Player detail
-<img width="1893" height="904" alt="image" src="https://github.com/user-attachments/assets/a1309522-d5a8-42cc-b04a-96fc5e235c18" />
-
-- Team detail
-<img width="1895" height="906" alt="image" src="https://github.com/user-attachments/assets/71b53865-d441-4450-96a6-888779e1ac9d" />
-
-- Analytics dashboard
-<img width="1894" height="904" alt="image" src="https://github.com/user-attachments/assets/52b84369-9090-4bc4-853c-b3dbf9313fb1" />
-
-- Player comparison
-<img width="1889" height="899" alt="image" src="https://github.com/user-attachments/assets/a1005113-b870-44d9-bc8f-af94cc5d45ee" />
+- Frontend: React, Vite, TypeScript, Tailwind CSS, React Router
+- Backend: Node, Express, TypeScript
+- Database: PostgreSQL for favorites and cache
+- Python service: FastAPI with `nba_api`
+- External providers: `nba_api` and API-Sports Basketball, both accessed through backend services only
 
 ## Features
 
-- Responsive landing page for portfolio presentation
-- Teams directory with filters and dynamic team detail pages
-- Players directory with search, filters and dynamic player detail pages
-- Advanced analytics dashboard using mock player statistics
-- Player comparison page with automatic stat winners
-- Favorites system persisted with localStorage
-- Service layer prepared for future API integration
-- Loading, error and empty states across data-driven pages
+- Portfolio landing page with architecture overview
+- Teams and players directories with detail pages
+- Analytics dashboard with real historical leaderboards and demo fallback
+- Player comparison lab
+- Favorites with backend persistence and frontend fallback mode
+- Standings page prepared for API-Sports + PostgreSQL cache
+- Historical playoffs and champions page
+- Games page prepared for future `GET /api/games?date=YYYY-MM-DD`
 
-## Tech Stack
+## Data modes
 
-- React
-- Vite
-- TypeScript
-- Tailwind CSS
-- React Router
-- Lucide React
-- Local Storage
-- Mock data service layer
+The frontend supports three data modes through `VITE_DATA_MODE`.
 
-## Project Structure
+### `mock`
 
-```text
-src/
-  components/     Reusable UI components
-  context/        Global client state, including favorites
-  data/           Mock teams, players and statistics
-  pages/          Route-level pages
-  services/       Data access layer
-  types/          TypeScript domain models
+Always uses local demo data.
+
+Useful for:
+
+- Frontend-only development
+- Stable portfolio demos
+- Vercel preview without backend
+
+```env
+VITE_DATA_MODE=mock
+VITE_API_URL=http://localhost:4000
 ```
 
-## Getting Started
+### `api`
+
+Always uses the backend API.
+
+Useful for:
+
+- Full-stack local development
+- Testing backend errors explicitly
+- Validating deployed backend integrations
+
+```env
+VITE_DATA_MODE=api
+VITE_API_URL=http://localhost:4000
+```
+
+### `hybrid`
+
+Tries the backend first and falls back to local demo data if the request fails.
+
+Recommended for public production demos while the backend deployment is still evolving.
+
+```env
+VITE_DATA_MODE=hybrid
+VITE_API_URL=https://your-backend-url.com
+```
+
+If `VITE_DATA_MODE` is missing or invalid, NBA Insight defaults to `hybrid`.
+
+## Production readiness
+
+- Frontend is prepared for Vercel deployment.
+- Backend is prepared for a later cloud deployment.
+- Demo/historical data keeps the public portfolio usable even when live providers are unavailable.
+- React never calls API-Sports or `nba_api` directly.
+- External API keys belong only in backend or service environment files.
+- The service layer centralizes backend calls and fallback behavior.
+
+## Environment variables
+
+Create a local `.env` from `.env.example`:
+
+```env
+VITE_API_URL=http://localhost:4000
+
+# mock   -> always use local demo data
+# api    -> always use backend API
+# hybrid -> try backend API first, fallback to mock/demo data
+VITE_DATA_MODE=hybrid
+```
+
+## Getting started
 
 Install dependencies:
 
@@ -72,7 +100,7 @@ Install dependencies:
 npm install
 ```
 
-Run locally:
+Run the frontend locally:
 
 ```bash
 npm run dev
@@ -84,36 +112,56 @@ Build for production:
 npm run build
 ```
 
-Preview the production build:
-
-```bash
-npm run preview
-```
-
 Run lint:
 
 ```bash
 npm run lint
 ```
 
-## Current Status
+## Project structure
 
-This is a frontend-only MVP. It does not include a backend, authentication, database or real NBA API integration yet.
+```text
+src/
+  components/     Reusable UI components
+  config/         Frontend configuration and data mode
+  context/        Global client state
+  data/           Mock and historical local data
+  pages/          Route-level pages
+  services/       Data access and fallback layer
+  types/          TypeScript domain models
+backend/
+  src/            Node/Express API, PostgreSQL and provider services
+nba-service/
+  app/            FastAPI service for nba_api
+```
 
-Current data is mock data stored locally in the project and exposed through `src/services/nbaService.ts`.
+## Recommended workflows
+
+Frontend-only demo:
+
+```env
+VITE_DATA_MODE=mock
+```
+
+Local full-stack development:
+
+```env
+VITE_DATA_MODE=api
+VITE_API_URL=http://localhost:4000
+```
+
+Public Vercel demo before backend deployment:
+
+```env
+VITE_DATA_MODE=hybrid
+VITE_API_URL=https://your-backend-url.com
+```
 
 ## Roadmap
 
-- Real NBA API integration
-- Backend with Node/Express or similar
-- PostgreSQL database
-- Authentication
-- Cloud-synced user favorites
-- Personalized dashboards
-- Deployment pipeline
-
-## Environment Variables
-
-No environment variables are required for the current mock-data version.
-
-See `.env.example` for future API configuration placeholders.
+- Games/Schedule backend endpoint
+- Real-time standings provider in production
+- Auth and user accounts
+- PostgreSQL cache dashboard
+- Advanced player trends
+- Full backend deployment

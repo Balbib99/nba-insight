@@ -1,5 +1,6 @@
 import { AlertCircle, CalendarDays, CalendarPlus, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
+import { DataModeBadge } from '../components/DataModeBadge';
 import { GameCard } from '../components/GameCard';
 import { getGamesByDate } from '../services/nbaService';
 import type { Game } from '../data/gamesMock';
@@ -76,7 +77,7 @@ export function Games() {
         } catch {
           if (isMounted) {
             setGames([]);
-            setError('Games could not be loaded. Please try another date.');
+            setError('Live games are currently unavailable. Showing demo data when fallback data exists.');
           }
         } finally {
           if (isMounted) {
@@ -112,6 +113,7 @@ export function Games() {
                   <span className="inline-flex h-7 items-center rounded-lg border border-amber-300/30 bg-amber-400/10 px-2.5 text-xs font-semibold text-amber-100">
                     Demo Game Data
                   </span>
+                  <DataModeBadge />
                 </div>
                 <h1 className="mt-3 text-4xl font-bold tracking-normal text-white sm:text-5xl">
                   NBA Games
