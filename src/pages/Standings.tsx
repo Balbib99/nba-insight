@@ -1,6 +1,8 @@
-import { AlertCircle, CheckCircle2, Loader2, Table2 } from 'lucide-react';
+import { AlertCircle, CheckCircle2, GitBranch, Loader2, Table2, Trophy } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { SelectFilter, type SelectOption } from '../components/SelectFilter';
+import { playoffBrackets, type PlayoffSeries } from '../data/playoffBrackets';
+import { seasonChampions } from '../data/seasonChampions';
 import { getRealStandings } from '../services/nbaService';
 import type { RealStanding } from '../types/realStanding';
 
@@ -44,6 +46,145 @@ function statusClasses(status: ReturnType<typeof playoffStatus>): string {
   }
 
   return 'border-white/10 bg-white/[0.04] text-zinc-300';
+}
+
+function ChampionSummary({ season }: { season: string }) {
+  const champion = seasonChampions.find((seasonChampion) => seasonChampion.season === season);
+
+  if (!champion) {
+    return (
+      <section className="rounded-lg border border-white/10 bg-zinc-900/80 p-5 shadow-xl shadow-black/20">
+        <div className="flex items-start gap-4">
+          <div className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-white/[0.06] text-zinc-300">
+            <Trophy className="size-5" aria-hidden="true" />
+          </div>
+          <div>
+            <p className="text-sm font-medium text-zinc-400">{season} Champion</p>
+            <h2 className="mt-2 text-2xl font-semibold text-white">Not decided yet</h2>
+            <p className="mt-2 text-sm leading-6 text-zinc-400">
+              Championship data will appear here once the postseason is complete.
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="overflow-hidden rounded-lg border border-amber-300/20 bg-zinc-900/80 shadow-xl shadow-black/20">
+      <div className="grid gap-0 lg:grid-cols-[1.1fr_1.9fr]">
+        <div className="bg-amber-400/10 p-6">
+          <div className="flex items-center gap-3">
+            <div className="flex size-12 items-center justify-center rounded-lg border border-amber-300/30 bg-amber-300/10 text-amber-100">
+              <Trophy className="size-6" aria-hidden="true" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-amber-100">{season} Champion</p>
+              <h2 className="mt-1 text-2xl font-bold text-white">{champion.champion}</h2>
+            </div>
+          </div>
+          <p className="mt-4 text-sm leading-6 text-amber-50/80">{champion.note}</p>
+        </div>
+        <div className="grid gap-4 p-6 sm:grid-cols-3">
+          <div>
+            <p className="text-xs font-semibold uppercase text-zinc-500">Finals</p>
+            <p className="mt-2 text-lg font-semibold text-white">
+              {champion.champion} {champion.finalsResult}
+            </p>
+            <p className="mt-1 text-sm text-zinc-400">{champion.runnerUp}</p>
+          </div>
+          <div>
+            <p className="text-xs font-semibold uppercase text-zinc-500">Runner-up</p>
+            <p className="mt-2 text-lg font-semibold text-white">{champion.runnerUp}</p>
+            <p className="mt-1 text-sm text-zinc-400">NBA Finals finalist</p>
+          </div>
+          <div>
+            <p className="text-xs font-semibold uppercase text-zinc-500">Finals MVP</p>
+            <p className="mt-2 text-lg font-semibold text-white">{champion.finalsMvp}</p>
+            <p className="mt-1 text-sm text-zinc-400">Postseason award</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function SeriesCard({ series }: { series: PlayoffSeries }) {
+  return (
+    <div className="rounded-lg border border-white/10 bg-white/[0.04] p-3">
+      <div className="flex items-center justify-between gap-3">
+        <p className="truncate text-sm font-semibold text-white">{series.winner}</p>
+        <span className="rounded-lg bg-emerald-400/10 px-2 py-1 text-xs font-semibold text-emerald-100">
+          {series.result}
+        </span>
+      </div>
+      <p className="mt-1 truncate text-xs text-zinc-500">def. {series.loser}</p>
+    </div>
+  );
+}
+
+function PlayoffBracket({ season }: { season: string }) {
+  const bracket = playoffBrackets.find((playoffBracket) => playoffBracket.season === season);
+  const rounds: PlayoffSeries['round'][] = [
+    'First Round',
+    'Conference Semifinals',
+    'Conference Finals',
+    'NBA Finals',
+  ];
+
+  if (!bracket) {
+    return (
+      <section className="rounded-lg border border-white/10 bg-zinc-900/80 p-6 shadow-xl shadow-black/20">
+        <div className="flex items-start gap-4">
+          <div className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-white/[0.06] text-zinc-300">
+            <GitBranch className="size-5" aria-hidden="true" />
+          </div>
+          <div>
+            <h2 className="text-xl font-semibold text-white">Playoff bracket unavailable</h2>
+            <p className="mt-2 text-sm leading-6 text-zinc-400">
+              The bracket for this season will be added once playoff results are available.
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="rounded-lg border border-white/10 bg-zinc-900/80 p-5 shadow-xl shadow-black/20">
+      <div className="flex flex-col gap-3 border-b border-white/10 pb-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <div className="flex items-center gap-2 text-sm font-medium text-red-300">
+            <GitBranch className="size-4" aria-hidden="true" />
+            Playoff bracket
+          </div>
+          <h2 className="mt-2 text-2xl font-semibold text-white">{season} postseason path</h2>
+        </div>
+        <span className="inline-flex w-fit rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1 text-xs font-semibold text-zinc-300">
+          Local historical data
+        </span>
+      </div>
+      <div className="mt-5 overflow-x-auto">
+        <div className="grid min-w-[980px] grid-cols-4 gap-4">
+          {rounds.map((round) => {
+            const roundSeries = bracket.series.filter((series) => series.round === round);
+
+            return (
+              <div key={round} className="space-y-3">
+                <h3 className="text-sm font-semibold uppercase text-zinc-500">{round}</h3>
+                {roundSeries.map((series) => (
+                  <SeriesCard
+                    key={`${series.conference}-${series.round}-${series.winner}-${series.loser}`}
+                    series={series}
+                  />
+                ))}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
 }
 
 function StandingsTable({ teams, title }: { teams: RealStanding[]; title: string }) {
@@ -210,6 +351,11 @@ export function Standings() {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="mt-8 space-y-8">
+        <ChampionSummary season={season} />
+        <PlayoffBracket season={season} />
       </div>
 
       <div className="mt-8 rounded-lg border border-white/10 bg-white/[0.03] p-5 shadow-xl shadow-black/20">
