@@ -1,4 +1,4 @@
-import { Activity, ArrowRightLeft, BarChart3, Heart, Home, Shield, Table2, Users } from 'lucide-react';
+import { Activity, ArrowRightLeft, BarChart3, GitBranch, Heart, Home, Shield, Table2, Users } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
 const navItems = [
@@ -6,6 +6,7 @@ const navItems = [
   { label: 'Teams', path: '/teams', icon: Shield },
   { label: 'Players', path: '/players', icon: Users },
   { label: 'Standings', path: '/standings', icon: Table2 },
+  { label: 'Playoffs', path: '/playoffs', icon: GitBranch },
   { label: 'Analytics', path: '/analytics', icon: BarChart3 },
   { label: 'Compare', path: '/compare', icon: ArrowRightLeft },
   { label: 'Favorites', path: '/favorites', icon: Heart },
