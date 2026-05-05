@@ -1,3 +1,5 @@
+import { logger } from '../utils/logger.js';
+
 const PYTHON_NBA_SERVICE_URL =
   process.env.PYTHON_NBA_SERVICE_URL ?? 'http://localhost:8000';
 const PYTHON_NBA_SERVICE_TIMEOUT_MS = Number(
@@ -40,7 +42,7 @@ async function fetchPythonService<T>(
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), PYTHON_NBA_SERVICE_TIMEOUT_MS);
 
-  console.log(`Calling Python NBA service... ${url.pathname}${url.search}`);
+  logger.info(`Calling Python NBA service... ${url.pathname}${url.search}`);
 
   try {
     const response = await fetch(url, {
@@ -52,7 +54,7 @@ async function fetchPythonService<T>(
 
     if (!response.ok) {
       const detail = await response.text();
-      console.error('Python service error', response.status, detail);
+      logger.error('Python service error', response.status, detail);
 
       throw new PythonNbaServiceError(
         `Python NBA service responded with status ${response.status}`,
@@ -70,7 +72,7 @@ async function fetchPythonService<T>(
       throw new PythonNbaServiceError('Python NBA service returned no data', 404);
     }
 
-    console.log('Python service response OK');
+    logger.info('Python service response OK');
 
     return data;
   } catch (error) {
@@ -79,11 +81,11 @@ async function fetchPythonService<T>(
     }
 
     if (error instanceof Error && error.name === 'AbortError') {
-      console.error('Python service error', 'Request timed out');
+      logger.error('Python service error', 'Request timed out');
       throw new PythonNbaServiceError('Python NBA service request timed out', 504, error);
     }
 
-    console.error('Python service error', error);
+    logger.error('Python service error', error);
     throw new PythonNbaServiceError('Python NBA service is unavailable', 502, error);
   } finally {
     clearTimeout(timeout);

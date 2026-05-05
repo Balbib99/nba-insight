@@ -2,26 +2,69 @@ import 'dotenv/config';
 import cors from 'cors';
 import express from 'express';
 
+import { pool } from './db/pool.js';
 import favoritesRouter from './routes/favoritesRoutes.js';
 import playersRouter from './routes/players.routes.js';
 import realNbaRouter from './routes/realNbaRoutes.js';
 import standingsRouter from './routes/standingsRoutes.js';
 import statsRouter from './routes/stats.routes.js';
 import teamsRouter from './routes/teams.routes.js';
+import { logger } from './utils/logger.js';
 
 const app = express();
-const PORT = process.env.PORT ?? 4000;
-const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN ?? 'http://localhost:5173';
+const PORT = process.env.PORT || 4000;
+const FRONTEND_URL = process.env.FRONTEND_URL ?? 'http://localhost:5173';
+const ADDITIONAL_ALLOWED_ORIGINS = process.env.ADDITIONAL_ALLOWED_ORIGINS ?? '';
+const allowedOrigins = Array.from(
+  new Set(
+    [FRONTEND_URL, 'http://localhost:5173', ...ADDITIONAL_ALLOWED_ORIGINS.split(',')]
+      .map((origin) => origin.trim())
+      .filter(Boolean),
+  ),
+);
 
 app.use(
   cors({
-    origin: FRONTEND_ORIGIN,
+    credentials: true,
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error('Not allowed by CORS'));
+    },
   }),
 );
 app.use(express.json());
 
 app.get('/api/health', (_req, res) => {
-  res.json({ status: 'ok', message: 'NBA Insight API running' });
+  res.json({
+    status: 'ok',
+    service: 'nba-insight-api',
+    environment: process.env.NODE_ENV || 'development',
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.get('/api/health/db', async (_req, res) => {
+  try {
+    const result = await pool.query<{ now: Date }>('SELECT NOW()');
+
+    res.json({
+      status: 'ok',
+      database: 'connected',
+      timestamp: new Date().toISOString(),
+      dbTime: result.rows[0].now,
+    });
+  } catch (error) {
+    logger.error('Database health check failed', error);
+    res.status(500).json({
+      status: 'error',
+      database: 'disconnected',
+      message: 'Database connection failed',
+    });
+  }
 });
 
 app.use('/api/teams', teamsRouter);
@@ -36,5 +79,5 @@ app.use((_req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`NBA Insight API running on http://localhost:${PORT}`);
+  logger.info(`NBA Insight API running on port ${PORT}`);
 });

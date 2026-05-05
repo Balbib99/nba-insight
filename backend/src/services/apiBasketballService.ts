@@ -1,4 +1,5 @@
 import { pool } from '../db/pool.js';
+import { logger } from '../utils/logger.js';
 
 const API_BASKETBALL_BASE_URL =
   process.env.API_BASKETBALL_BASE_URL ?? 'https://v1.basketball.api-sports.io';
@@ -348,7 +349,7 @@ async function fetchApiSportsStandings(season: string): Promise<RealStanding[]> 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), API_BASKETBALL_TIMEOUT_MS);
 
-  console.log(`Calling API-Basketball service... ${url.pathname}${url.search}`);
+  logger.info(`Calling API-Basketball service... ${url.pathname}${url.search}`);
 
   try {
     const response = await fetch(url, {
@@ -361,7 +362,7 @@ async function fetchApiSportsStandings(season: string): Promise<RealStanding[]> 
 
     if (!response.ok) {
       const detail = await response.text();
-      console.error('API-Basketball service error', response.status, detail);
+      logger.error('API-Basketball service error', response.status, detail);
 
       throw new ApiBasketballServiceError(
         `API-Basketball responded with status ${response.status}`,
@@ -372,18 +373,18 @@ async function fetchApiSportsStandings(season: string): Promise<RealStanding[]> 
     const envelope = (await response.json()) as ApiSportsEnvelope;
 
     if (Array.isArray(envelope.errors) && envelope.errors.length > 0) {
-      console.error('API-Basketball service error', envelope.errors);
+      logger.error('API-Basketball service error', envelope.errors);
       throw new ApiBasketballServiceError('API-Basketball returned an error response', 502);
     }
 
     if (isRecord(envelope.errors) && Object.keys(envelope.errors).length > 0) {
-      console.error('API-Basketball service error', envelope.errors);
+      logger.error('API-Basketball service error', envelope.errors);
       throw new ApiBasketballServiceError('API-Basketball returned an error response', 502);
     }
 
     const standings = normalizeStandings(envelope.response);
 
-    console.log('API-Basketball service response OK');
+    logger.info('API-Basketball service response OK');
 
     return standings;
   } catch (error) {
@@ -392,11 +393,11 @@ async function fetchApiSportsStandings(season: string): Promise<RealStanding[]> 
     }
 
     if (error instanceof Error && error.name === 'AbortError') {
-      console.error('API-Basketball service error', 'Request timed out');
+      logger.error('API-Basketball service error', 'Request timed out');
       throw new ApiBasketballServiceError('API-Basketball request timed out', 504, error);
     }
 
-    console.error('API-Basketball service error', error);
+    logger.error('API-Basketball service error', error);
     throw new ApiBasketballServiceError('API-Basketball service is unavailable', 502, error);
   } finally {
     clearTimeout(timeout);
@@ -411,7 +412,7 @@ export async function getApiBasketballStandings(params: StandingsParams = {}) {
     const cachedStandings = await getCachedStandings(season, seasonType, false);
 
     if (cachedStandings) {
-      console.log('API-Basketball standings cache hit');
+      logger.info('API-Basketball standings cache hit');
       return cachedStandings;
     }
   }
@@ -425,7 +426,7 @@ export async function getApiBasketballStandings(params: StandingsParams = {}) {
     const expiredCache = await getCachedStandings(season, seasonType, true);
 
     if (expiredCache) {
-      console.warn('API-Basketball failed; returning expired standings cache');
+      logger.warn('API-Basketball failed; returning expired standings cache');
       return expiredCache;
     }
 
