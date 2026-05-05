@@ -79,6 +79,121 @@ If `VITE_DATA_MODE` is missing or invalid, NBA Insight defaults to `hybrid`.
 - External API keys belong only in backend or service environment files.
 - The service layer centralizes backend calls and fallback behavior.
 
+## Cloud deployment plan
+
+### Frontend: Vercel
+
+Production variables:
+
+```env
+VITE_API_URL=https://your-render-backend.onrender.com
+VITE_DATA_MODE=hybrid
+```
+
+`hybrid` is recommended for the public portfolio because the frontend tries the backend first and keeps the demo usable with mock/historical fallback data if a backend service is unavailable.
+
+### Backend: Render
+
+Use the `backend/` folder as the Render service root.
+
+Build command:
+
+```bash
+npm install && npm run build
+```
+
+Start command:
+
+```bash
+npm start
+```
+
+Required environment variables:
+
+```env
+NODE_ENV=production
+DATABASE_URL=<Neon connection string>
+DATABASE_SSL=true
+FRONTEND_URL=https://your-vercel-app.vercel.app
+ADDITIONAL_ALLOWED_ORIGINS=
+API_BASKETBALL_KEY=your_api_key_here
+```
+
+Optional environment variables:
+
+```env
+PYTHON_NBA_SERVICE_URL=https://your-python-service-url
+PYTHON_NBA_SERVICE_TIMEOUT_MS=150000
+API_BASKETBALL_BASE_URL=https://v1.basketball.api-sports.io
+API_BASKETBALL_NBA_LEAGUE_ID=12
+API_BASKETBALL_TIMEOUT_MS=15000
+API_BASKETBALL_STANDINGS_TTL_HOURS=24
+```
+
+If the Python service is not deployed yet, keep `VITE_DATA_MODE=hybrid` on the frontend so the public demo can fall back gracefully where possible.
+
+### Database: Neon PostgreSQL
+
+Create a Neon PostgreSQL database and set Render's `DATABASE_URL` to the Neon connection string.
+
+Run the schema manually:
+
+```bash
+psql "$DATABASE_URL" -f backend/src/db/schema.sql
+```
+
+Neon requires SSL, so set:
+
+```env
+DATABASE_SSL=true
+```
+
+## Health checks
+
+Backend API health:
+
+```text
+GET /api/health
+```
+
+Expected response:
+
+```json
+{
+  "status": "ok",
+  "service": "nba-insight-api",
+  "environment": "production",
+  "timestamp": "2026-05-05T00:00:00.000Z"
+}
+```
+
+Database health:
+
+```text
+GET /api/health/db
+```
+
+Success response:
+
+```json
+{
+  "status": "ok",
+  "database": "connected",
+  "timestamp": "2026-05-05T00:00:00.000Z",
+  "dbTime": "2026-05-05T00:00:00.000Z"
+}
+```
+
+Failure response:
+
+```json
+{
+  "status": "error",
+  "database": "disconnected",
+  "message": "Database connection failed"
+}
+```
+
 ## Environment variables
 
 Create a local `.env` from `.env.example`:
@@ -116,6 +231,41 @@ Run lint:
 
 ```bash
 npm run lint
+```
+
+## Local development
+
+Backend:
+
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+Local backend `.env` example:
+
+```env
+PORT=4000
+NODE_ENV=development
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/nba_insight
+DATABASE_SSL=false
+FRONTEND_URL=http://localhost:5173
+ADDITIONAL_ALLOWED_ORIGINS=
+```
+
+Frontend:
+
+```bash
+npm install
+npm run dev
+```
+
+Frontend `.env` example:
+
+```env
+VITE_API_URL=http://localhost:4000
+VITE_DATA_MODE=hybrid
 ```
 
 ## Project structure
