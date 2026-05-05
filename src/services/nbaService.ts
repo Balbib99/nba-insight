@@ -3,12 +3,18 @@ import { API_BASE_URL } from '../config/api';
 import type { Player } from '../types/player';
 import type { PlayerStats } from '../types/playerStats';
 import type { RealLeagueLeader } from '../types/realLeagueLeader';
+import type { RealStanding } from '../types/realStanding';
 import type { Team } from '../types/team';
 import type { TeamStats } from '../types/teamStats';
 
 export interface RealLeagueLeadersParams {
   season?: string;
   stat?: string;
+  season_type?: string;
+}
+
+export interface RealStandingsParams {
+  season?: string;
   season_type?: string;
 }
 
@@ -113,6 +119,22 @@ export async function getRealLeagueLeaders(
   return fetchFromApi<RealLeagueLeader[]>(
     `/api/real/league-leaders${queryString ? `?${queryString}` : ''}`,
   );
+}
+
+export async function getRealStandings(params: RealStandingsParams = {}): Promise<RealStanding[]> {
+  const searchParams = new URLSearchParams();
+
+  if (params.season) {
+    searchParams.set('season', params.season);
+  }
+
+  if (params.season_type) {
+    searchParams.set('season_type', params.season_type);
+  }
+
+  const queryString = searchParams.toString();
+
+  return fetchFromApi<RealStanding[]>(`/api/standings${queryString ? `?${queryString}` : ''}`);
 }
 
 export async function getFavorites(userId: string): Promise<string[]> {

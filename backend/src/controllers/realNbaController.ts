@@ -4,6 +4,7 @@ import {
   getLeagueLeaders,
   getPlayerGameLog,
   getPythonServiceHealth,
+  getStandings,
   getTeamDetails,
   PythonNbaServiceError,
   type RealNbaQueryParams,
@@ -52,6 +53,14 @@ export const getRealPlayerGameLog = async (req: Request, res: Response) => {
 export const getRealTeamDetails = async (req: Request, res: Response) => {
   try {
     return res.json(await getTeamDetails(req.params.teamId));
+  } catch (error) {
+    return handleError(error, res);
+  }
+};
+
+export const getRealStandings = async (req: Request, res: Response) => {
+  try {
+    return res.json(await getStandings(queryParams(req)));
   } catch (error) {
     return handleError(error, res);
   }

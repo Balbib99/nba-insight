@@ -67,7 +67,7 @@ pip install -r requirements.txt
 Copia `.env.example` a `.env` si quieres ajustar configuracion:
 
 ```env
-NBA_API_TIMEOUT_SECONDS=30
+NBA_API_TIMEOUT_SECONDS=120
 ALLOWED_ORIGINS=http://localhost:4000
 ```
 
@@ -141,6 +141,21 @@ curl http://localhost:8000/team-details/1610612747
 ```
 
 Devuelve datos normalizados del equipo y, cuando NBA.com los incluya, historial y campeonatos.
+
+### GET /standings
+
+Query params:
+
+- `season`: por defecto `2025-26`
+- `season_type`: por defecto `Regular Season`
+
+Ejemplo:
+
+```bash
+curl "http://localhost:8000/standings?season=2025-26&season_type=Regular%20Season"
+```
+
+Devuelve la clasificacion real normalizada por equipo con conferencia, division, victorias, derrotas, porcentaje, ranking, record local/visitante, ultimos 10 y racha.
 
 ## Errores
 

@@ -1,7 +1,7 @@
 const PYTHON_NBA_SERVICE_URL =
   process.env.PYTHON_NBA_SERVICE_URL ?? 'http://localhost:8000';
 const PYTHON_NBA_SERVICE_TIMEOUT_MS = Number(
-  process.env.PYTHON_NBA_SERVICE_TIMEOUT_MS ?? 10000,
+  process.env.PYTHON_NBA_SERVICE_TIMEOUT_MS ?? 150000,
 );
 
 export interface RealNbaQueryParams {
@@ -111,4 +111,11 @@ export async function getPlayerGameLog(playerId: string, params: RealNbaQueryPar
 
 export async function getTeamDetails(teamId: string) {
   return fetchPythonService(`/team-details/${encodeURIComponent(teamId)}`);
+}
+
+export async function getStandings(params: RealNbaQueryParams) {
+  return fetchPythonService('/standings', {
+    season: params.season,
+    season_type: params.season_type,
+  });
 }

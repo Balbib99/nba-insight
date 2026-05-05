@@ -9,6 +9,7 @@ from app.schemas import (
     HealthResponse,
     LeagueLeader,
     PlayerGameLogEntry,
+    StandingTeam,
     TeamDetailsResponse,
 )
 from app.services.nba_stats_service import (
@@ -17,6 +18,7 @@ from app.services.nba_stats_service import (
     NbaStatsServiceError,
     get_league_leaders,
     get_player_game_log,
+    get_standings,
     get_team_details,
 )
 
@@ -91,5 +93,16 @@ def player_gamelog(
 def team_details(team_id: int) -> dict:
     try:
         return get_team_details(team_id=team_id)
+    except Exception as error:
+        _handle_nba_service_error(error)
+
+
+@app.get("/standings", response_model=list[StandingTeam])
+def standings(
+    season: str = Query(default="2025-26", min_length=7, max_length=7),
+    season_type: SeasonType = "Regular Season",
+) -> list[dict]:
+    try:
+        return get_standings(season=season, season_type=season_type)
     except Exception as error:
         _handle_nba_service_error(error)

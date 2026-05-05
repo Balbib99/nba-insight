@@ -52,3 +52,21 @@ class TeamDetailsResponse(BaseModel):
     dLeagueAffiliation: str | None = None
     championships: list[dict] = Field(default_factory=list)
     history: list[dict] = Field(default_factory=list)
+
+
+class StandingTeam(BaseModel):
+    teamId: int
+    teamName: str
+    teamCity: str
+    teamAbbreviation: str
+    conference: str
+    division: str
+    wins: int
+    losses: int
+    winPct: float
+    conferenceRank: int
+    divisionRank: int
+    homeRecord: str
+    awayRecord: str
+    lastTen: str
+    streak: str

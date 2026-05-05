@@ -7,6 +7,7 @@ import { Favorites } from './pages/Favorites';
 import { HomePage } from './pages/HomePage';
 import { PlayerDetail } from './pages/PlayerDetail';
 import { Players } from './pages/Players';
+import { Standings } from './pages/Standings';
 import { TeamDetail } from './pages/TeamDetail';
 import { TeamsPage } from './pages/TeamsPage';
 
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="/teams/:id" element={<TeamDetail />} />
           <Route path="/players" element={<Players />} />
           <Route path="/players/:id" element={<PlayerDetail />} />
+          <Route path="/standings" element={<Standings />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/compare" element={<Compare />} />
           <Route path="/favorites" element={<Favorites />} />
