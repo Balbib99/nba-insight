@@ -1,10 +1,22 @@
-import { Activity, ArrowRightLeft, BarChart3, GitBranch, Heart, Home, Shield, Table2, Users } from 'lucide-react';
+import {
+  Activity,
+  ArrowRightLeft,
+  BarChart3,
+  CalendarDays,
+  GitBranch,
+  Heart,
+  Home,
+  Shield,
+  Table2,
+  Users,
+} from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
 const navItems = [
   { label: 'Home', path: '/', icon: Home },
   { label: 'Teams', path: '/teams', icon: Shield },
   { label: 'Players', path: '/players', icon: Users },
+  { label: 'Games', path: '/games', icon: CalendarDays },
   { label: 'Standings', path: '/standings', icon: Table2 },
   { label: 'Playoffs', path: '/playoffs', icon: GitBranch },
   { label: 'Analytics', path: '/analytics', icon: BarChart3 },

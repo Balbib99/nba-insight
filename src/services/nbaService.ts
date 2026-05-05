@@ -1,5 +1,6 @@
 import { mockTeamStats } from '../data/mockTeamStats';
 import { API_BASE_URL } from '../config/api';
+import { getMockGamesByDate, type Game } from '../data/gamesMock';
 import type { Player } from '../types/player';
 import type { PlayerStats } from '../types/playerStats';
 import type { RealLeagueLeader } from '../types/realLeagueLeader';
@@ -135,6 +136,12 @@ export async function getRealStandings(params: RealStandingsParams = {}): Promis
   const queryString = searchParams.toString();
 
   return fetchFromApi<RealStanding[]>(`/api/standings${queryString ? `?${queryString}` : ''}`);
+}
+
+export async function getGamesByDate(date: string): Promise<Game[]> {
+  // Temporary local mock source. Future phase:
+  // return fetchFromApi<Game[]>(`/api/games?date=${encodeURIComponent(date)}`);
+  return Promise.resolve(getMockGamesByDate(date));
 }
 
 export async function getFavorites(userId: string): Promise<string[]> {

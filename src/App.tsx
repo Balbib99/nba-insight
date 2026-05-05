@@ -4,6 +4,7 @@ import { Header } from './components/Header';
 import { Analytics } from './pages/Analytics';
 import { Compare } from './pages/Compare';
 import { Favorites } from './pages/Favorites';
+import { Games } from './pages/Games';
 import { HomePage } from './pages/HomePage';
 import { PlayerDetail } from './pages/PlayerDetail';
 import { Players } from './pages/Players';
@@ -23,6 +24,7 @@ export default function App() {
           <Route path="/teams/:id" element={<TeamDetail />} />
           <Route path="/players" element={<Players />} />
           <Route path="/players/:id" element={<PlayerDetail />} />
+          <Route path="/games" element={<Games />} />
           <Route path="/standings" element={<Standings />} />
           <Route path="/playoffs" element={<Playoffs />} />
           <Route path="/analytics" element={<Analytics />} />
