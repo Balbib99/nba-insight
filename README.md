@@ -19,9 +19,94 @@ It combines a React/Vite frontend, a Node/Express API gateway, PostgreSQL persis
 - Analytics dashboard with real historical leaderboards and demo fallback
 - Player comparison lab
 - Favorites with backend persistence and frontend fallback mode
+- Backend authentication foundations with bcrypt password hashing and JWT
 - Standings page prepared for API-Sports + PostgreSQL cache
 - Historical playoffs and champions page
 - Games page prepared for future `GET /api/games?date=YYYY-MM-DD`
+
+## Authentication
+
+The backend includes authentication foundations for future user accounts.
+
+- Users can register and log in.
+- Passwords are hashed with `bcryptjs`.
+- JWT is used for authenticated requests.
+- Demo/auth UI will be added later in the frontend.
+- Favorites will be associated with authenticated users in a later phase.
+
+Environment variables:
+
+```env
+JWT_SECRET=change_me_in_production
+JWT_EXPIRES_IN=7d
+```
+
+In production, `JWT_SECRET` must be set to a secure value and must not be `change_me_in_production`.
+
+### Auth endpoints
+
+Register:
+
+```text
+POST /api/auth/register
+```
+
+Request body:
+
+```json
+{
+  "name": "Demo User",
+  "email": "demo@example.com",
+  "password": "password123"
+}
+```
+
+Login:
+
+```text
+POST /api/auth/login
+```
+
+Request body:
+
+```json
+{
+  "email": "demo@example.com",
+  "password": "password123"
+}
+```
+
+Both register and login return:
+
+```json
+{
+  "user": {
+    "id": 1,
+    "name": "Demo User",
+    "email": "demo@example.com"
+  },
+  "token": "jwt-token"
+}
+```
+
+Current authenticated user:
+
+```text
+GET /api/auth/me
+Authorization: Bearer <token>
+```
+
+Response:
+
+```json
+{
+  "user": {
+    "id": 1,
+    "name": "Demo User",
+    "email": "demo@example.com"
+  }
+}
+```
 
 ## Data modes
 
