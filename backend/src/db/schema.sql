@@ -6,6 +6,14 @@ CREATE TABLE IF NOT EXISTS favorites (
   UNIQUE(user_id, player_id)
 );
 
+CREATE TABLE IF NOT EXISTS users (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL UNIQUE,
+  password_hash TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS standings_cache (
   id SERIAL PRIMARY KEY,
   provider TEXT NOT NULL DEFAULT 'api-basketball',

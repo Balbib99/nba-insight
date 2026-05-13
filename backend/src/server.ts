@@ -3,6 +3,7 @@ import cors from 'cors';
 import express from 'express';
 
 import { pool } from './db/pool.js';
+import authRouter from './routes/auth.js';
 import favoritesRouter from './routes/favoritesRoutes.js';
 import playersRouter from './routes/players.routes.js';
 import realNbaRouter from './routes/realNbaRoutes.js';
@@ -70,6 +71,7 @@ app.get('/api/health/db', async (_req, res) => {
 app.use('/api/teams', teamsRouter);
 app.use('/api/players', playersRouter);
 app.use('/api/stats', statsRouter);
+app.use('/api/auth', authRouter);
 app.use('/api/favorites', favoritesRouter);
 app.use('/api/real', realNbaRouter);
 app.use('/api/standings', standingsRouter);
