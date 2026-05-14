@@ -1,8 +1,10 @@
 import { AlertCircle, Heart, Loader2, Trash2, UserRound } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { useFavorites } from '../context/useFavorites';
 
 export function Favorites() {
+  const { isAuthenticated, isDemoMode } = useAuth();
   const { error, favorites, isLoading, removeFavorite } = useFavorites();
 
   return (
@@ -25,6 +27,16 @@ export function Favorites() {
                 {favorites.length} saved
               </span>
             </div>
+            {isDemoMode ? (
+              <p className="mt-5 w-fit rounded-lg border border-sky-300/30 bg-sky-400/10 px-3 py-2 text-sm text-sky-100">
+                Demo Mode: favorites are stored locally in this browser.
+              </p>
+            ) : null}
+            {isAuthenticated ? (
+              <p className="mt-5 w-fit rounded-lg border border-emerald-300/30 bg-emerald-400/10 px-3 py-2 text-sm text-emerald-100">
+                Signed in: favorites are saved to your account.
+              </p>
+            ) : null}
           </div>
         </div>
       </div>

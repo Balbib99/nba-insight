@@ -24,15 +24,53 @@ It combines a React/Vite frontend, a Node/Express API gateway, PostgreSQL persis
 - Historical playoffs and champions page
 - Games page prepared for future `GET /api/games?date=YYYY-MM-DD`
 
-## Authentication
+## Authentication and Demo Mode
 
-The backend includes authentication foundations for future user accounts.
+NBA Insight supports a frontend entry flow for demo access and backend-backed accounts.
+
+- `/auth` is the entry page for fresh visitors.
+- Demo Mode gives access to the full app without registration.
+- Account Mode lets users register or log in through the backend auth endpoints.
+- Logout and Exit Demo clear the local auth state and return the user to `/auth`.
+- JWT is stored in `localStorage` for this portfolio demo.
+- Favorites storage is isolated by auth mode:
+  - demo mode -> `localStorage` under `nba_insight_demo_favorites`
+  - authenticated mode -> PostgreSQL by the authenticated JWT user id
 
 - Users can register and log in.
 - Passwords are hashed with `bcryptjs`.
 - JWT is used for authenticated requests.
-- Demo/auth UI will be added later in the frontend.
-- Favorites will be associated with authenticated users in a later phase.
+- Frontend auth state is restored on refresh with `GET /api/auth/me`.
+- Demo/mock/hybrid data mode remains independent of auth mode.
+
+### Favorites schema migration
+
+The recommended development schema stores authenticated favorites by `users.id`:
+
+```sql
+CREATE TABLE IF NOT EXISTS favorites (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  player_id TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(user_id, player_id)
+);
+```
+
+If an existing local or cloud development database still has the old `favorites.user_id TEXT` table from the demo phase,
+reset that table before testing authenticated favorite isolation:
+
+```sql
+DROP TABLE IF EXISTS favorites;
+```
+
+Then re-run:
+
+```bash
+psql "$DATABASE_URL" -f backend/src/db/schema.sql
+```
+
+This reset removes existing development favorites.
 
 Environment variables:
 

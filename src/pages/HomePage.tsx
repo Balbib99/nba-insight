@@ -30,7 +30,7 @@ const demonstrations = [
   },
   {
     title: 'PostgreSQL persistence',
-    description: 'Favorites and standings cache are stored server-side with relational constraints.',
+    description: 'The backend is prepared for account-based favorites and standings cache with relational constraints.',
     icon: Database,
   },
   {
@@ -68,7 +68,7 @@ const dataSources = [
   },
   {
     name: 'PostgreSQL',
-    detail: 'Favorites and integration cache',
+    detail: 'Account favorites and integration cache foundation',
     icon: Database,
   },
 ];
@@ -90,7 +90,7 @@ const limitations = [
 const roadmap = [
   'Games/Schedule page',
   'Real-time standings provider',
-  'Auth and user accounts',
+  'Favorites dual storage by auth mode',
   'PostgreSQL cache dashboard',
   'Advanced player trends',
 ];
@@ -98,10 +98,12 @@ const roadmap = [
 const architectureStatus = [
   'Frontend deployed on Vercel from the stable main branch',
   'Backend Node/Express prepared for cloud deployment',
-  'PostgreSQL used locally for favorites and cache',
+  'PostgreSQL prepared for authenticated favorites and cache',
   'API-BASKETBALL used through backend only',
   'nba_api used through Python service only',
   'Public demo supports mock/hybrid data mode',
+  'Demo Mode: full public portfolio experience, with favorites stored locally in this browser',
+  'Account Mode: authenticated users have persistent favorites stored in PostgreSQL by account',
 ];
 
 function SectionHeading({

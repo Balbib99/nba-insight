@@ -4,11 +4,9 @@ import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../config/auth.js';
 import type { JwtPayload } from '../types/auth.js';
 
-declare global {
-  namespace Express {
-    interface Request {
-      auth?: JwtPayload;
-    }
+declare module 'express-serve-static-core' {
+  interface Request {
+    auth?: JwtPayload;
   }
 }
 
