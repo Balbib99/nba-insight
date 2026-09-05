@@ -33,10 +33,10 @@ export function FavoriteButton({ player, variant = 'icon' }: FavoriteButtonProps
   if (variant === 'full') {
     return (
       <button
-        className={`inline-flex h-10 items-center justify-center gap-2 rounded-lg border px-4 text-sm font-semibold transition ${
+        className={`inline-flex h-10 items-center justify-center gap-2 border px-4 font-body text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-live-cyan/60 ${
           active
-            ? 'border-red-400/50 bg-red-500/15 text-red-200 hover:bg-red-500/20'
-            : 'border-white/10 bg-white/[0.06] text-zinc-200 hover:bg-white/10 hover:text-white'
+            ? 'border-score-orange/50 bg-score-orange/10 text-score-orange hover:bg-score-orange/15'
+            : 'border-rule text-text-secondary hover:text-text-primary'
         }`}
         type="button"
         disabled={isDisabled}
@@ -53,10 +53,10 @@ export function FavoriteButton({ player, variant = 'icon' }: FavoriteButtonProps
 
   return (
     <button
-      className={`flex size-10 items-center justify-center rounded-lg border transition ${
+      className={`flex size-10 items-center justify-center border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-live-cyan/60 ${
         active
-          ? 'border-red-400/50 bg-red-500/15 text-red-200 hover:bg-red-500/20'
-          : 'border-white/10 bg-white/[0.06] text-zinc-300 hover:bg-white/10 hover:text-white'
+          ? 'border-score-orange/50 bg-score-orange/10 text-score-orange hover:bg-score-orange/15'
+          : 'border-rule text-text-secondary hover:text-text-primary'
       }`}
       type="button"
       disabled={isDisabled}

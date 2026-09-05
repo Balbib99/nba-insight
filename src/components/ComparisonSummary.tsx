@@ -1,4 +1,3 @@
-import { Sparkles } from 'lucide-react';
 import type { Player } from '../types/player';
 import type { PlayerStats } from '../types/playerStats';
 
@@ -45,16 +44,13 @@ export function ComparisonSummary({ playerA, playerB, playerAStats, playerBStats
   );
 
   return (
-    <article className="rounded-lg border border-white/10 bg-zinc-900/80 p-5 shadow-xl shadow-black/20">
-      <div className="flex items-center gap-2 text-sm font-medium text-red-300">
-        <Sparkles className="size-4" aria-hidden="true" />
-        Comparison Summary
-      </div>
-      <div className="mt-5 grid gap-3 lg:grid-cols-3">
+    <article className="border border-rule bg-ink-900 p-5">
+      <p className="font-body text-sm text-text-secondary">Comparison summary</p>
+      <div className="mt-4 divide-y divide-rule border-t border-rule">
         {[scoring, playmaking, efficiency].map((summary) => (
-          <div key={summary} className="rounded-lg bg-white/[0.04] p-4 text-sm leading-6 text-zinc-300">
+          <p key={summary} className="py-3 text-sm leading-6 text-text-secondary first:pt-4">
             {summary}
-          </div>
+          </p>
         ))}
       </div>
     </article>

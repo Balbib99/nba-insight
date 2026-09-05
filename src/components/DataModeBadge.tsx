@@ -1,4 +1,3 @@
-import { Database, Radio, RefreshCw } from 'lucide-react';
 import { DATA_MODE, type DataMode } from '../config/api';
 
 interface DataModeBadgeProps {
@@ -6,47 +5,48 @@ interface DataModeBadgeProps {
   mode?: DataMode;
 }
 
-const config: Record<
-  DataMode,
-  {
-    label: string;
-    description: string;
-    className: string;
-    icon: typeof Database;
-  }
-> = {
-  mock: {
-    label: 'Mock Data',
-    description: 'Using local demo data',
-    className: 'border-amber-300/30 bg-amber-400/10 text-amber-100',
-    icon: Database,
-  },
-  api: {
-    label: 'Live API',
-    description: 'Using backend API',
-    className: 'border-emerald-300/30 bg-emerald-400/10 text-emerald-100',
-    icon: Radio,
-  },
-  hybrid: {
-    label: 'Hybrid Mode',
-    description: 'Backend first, mock fallback',
-    className: 'border-sky-300/30 bg-sky-400/10 text-sky-100',
-    icon: RefreshCw,
-  },
-};
-
 export function DataModeBadge({ variant = 'compact', mode = DATA_MODE }: DataModeBadgeProps) {
-  const modeConfig = config[mode];
-  const Icon = modeConfig.icon;
+  if (mode === 'api') {
+    return (
+      <span
+        className="inline-flex w-fit items-center gap-2 text-xs font-medium text-live-cyan"
+        title="Using backend API"
+      >
+        <span className="size-1.5 rounded-full bg-live-cyan motion-safe:animate-pulse" aria-hidden="true" />
+        Live data
+        {variant === 'full' ? (
+          <span className="hidden font-normal text-text-secondary sm:inline">Using backend API</span>
+        ) : null}
+      </span>
+    );
+  }
+
+  if (mode === 'hybrid') {
+    return (
+      <span
+        className="inline-flex w-fit items-center gap-1.5 border border-rule px-2.5 py-1 text-xs font-medium text-text-secondary"
+        title="Backend first, mock fallback"
+      >
+        <span className="font-display text-score-orange" aria-hidden="true">
+          &dagger;
+        </span>
+        Hybrid mode
+        {variant === 'full' ? (
+          <span className="hidden font-normal opacity-80 sm:inline">Backend first, mock fallback</span>
+        ) : null}
+      </span>
+    );
+  }
 
   return (
     <span
-      className={`inline-flex w-fit items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold ${modeConfig.className}`}
-      title={modeConfig.description}
+      className="inline-flex w-fit items-center border border-rule px-2.5 py-1 text-xs font-medium text-text-secondary"
+      title="Using local demo data"
     >
-      <Icon className="size-3.5" aria-hidden="true" />
-      {modeConfig.label}
-      {variant === 'full' ? <span className="hidden font-medium opacity-80 sm:inline">{modeConfig.description}</span> : null}
+      Mock data
+      {variant === 'full' ? (
+        <span className="hidden font-normal opacity-80 sm:ml-1.5 sm:inline">Using local demo data</span>
+      ) : null}
     </span>
   );
 }

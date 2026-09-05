@@ -1,18 +1,58 @@
-﻿@import "tailwindcss";
+@import "tailwindcss";
+
+@theme {
+  --color-ink-950: #0a0e14;
+  --color-ink-900: #10141c;
+  --color-paper-100: #edeae2;
+  --color-paper-50: #f5f3ee;
+  --color-score-orange: #ff6b1a;
+  --color-live-cyan: #2fd3c9;
+  --color-ledger-blue: #5b8dbe;
+  --color-ledger-ink: #1d3557;
+  --color-rule: #212837;
+  --color-rule-paper: #c9c3b4;
+  --color-text-primary: #f4f2ed;
+  --color-text-secondary: #9ba3b4;
+  --color-up: #3ddc84;
+  --color-down: #ff4757;
+
+  --font-display: 'Barlow Condensed', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Public Sans', ui-sans-serif, system-ui, sans-serif;
+}
 
 :root {
   color-scheme: dark;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: #09090b;
+  background: var(--color-ink-950);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
 }
 
 button,
 a {
   -webkit-tap-highlight-color: transparent;
+}
+
+@keyframes scorebug-wipe {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.scorebug-reveal {
+  animation: scorebug-wipe 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scorebug-reveal {
+    animation: none;
+  }
 }

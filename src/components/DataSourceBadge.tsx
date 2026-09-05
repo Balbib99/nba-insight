@@ -9,10 +9,10 @@ export function DataSourceBadge({ source }: DataSourceBadgeProps) {
 
   return (
     <span
-      className="inline-flex h-7 w-fit items-center justify-center rounded-lg border border-amber-300/30 bg-amber-400/10 px-2.5 text-xs font-semibold uppercase tracking-normal text-amber-100"
+      className="inline-flex h-7 w-fit items-center border border-rule px-2.5 text-xs font-medium text-text-secondary"
       title="Mock data is being displayed"
     >
-      Mock
+      Mock data
     </span>
   );
 }

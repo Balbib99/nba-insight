@@ -1,30 +1,26 @@
-import { Code2, ExternalLink } from 'lucide-react';
-
 export function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-zinc-950">
-      <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-8 text-sm text-zinc-400 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+    <footer className="border-t border-rule bg-ink-950">
+      <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-6 text-sm text-text-secondary sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
         <div>
-          <p className="font-semibold text-white">NBA Insight</p>
-          <p className="mt-1">Built as a portfolio project</p>
+          <p className="font-medium text-text-primary">NBA Insight</p>
+          <p className="mt-0.5">Full-stack: React, Node/Express, PostgreSQL, FastAPI.</p>
         </div>
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-5">
           <a
-            className="inline-flex h-10 items-center gap-2 rounded-lg border border-white/10 px-3 font-medium text-zinc-300 transition hover:bg-white/10 hover:text-white"
+            className="font-medium text-text-secondary underline decoration-rule underline-offset-4 transition-colors hover:text-text-primary hover:decoration-score-orange"
             href="https://github.com/Balbib99"
             target="_blank"
             rel="noreferrer"
           >
-            <Code2 className="size-4" aria-hidden="true" />
             GitHub
           </a>
           <a
-            className="inline-flex h-10 items-center gap-2 rounded-lg border border-white/10 px-3 font-medium text-zinc-300 transition hover:bg-white/10 hover:text-white"
+            className="font-medium text-text-secondary underline decoration-rule underline-offset-4 transition-colors hover:text-text-primary hover:decoration-score-orange"
             href="https://www.linkedin.com/in/balbino-martinez-rodriguez-2912bb332"
             target="_blank"
             rel="noreferrer"
           >
-            <ExternalLink className="size-4" aria-hidden="true" />
             LinkedIn
           </a>
         </div>

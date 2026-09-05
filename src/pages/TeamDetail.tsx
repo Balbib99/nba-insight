@@ -1,32 +1,46 @@
-import {
-  Activity,
-  AlertCircle,
-  ArrowLeft,
-  BadgePercent,
-  Flag,
-  Gauge,
-  Loader2,
-  Shield,
-  Sparkles,
-  Trophy,
-  Users,
-} from 'lucide-react';
+import { AlertCircle, ArrowLeft, Loader2, Sparkles, Users } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { DataSourceBadge } from '../components/DataSourceBadge';
+import { HeatLegend } from '../components/HeatLegend';
 import { getPlayersByTeamId, getTeamById, getTeamStatsById } from '../services/nbaService';
 import type { Player } from '../types/player';
 import type { Team } from '../types/team';
 import type { TeamStats } from '../types/teamStats';
 
+// Typical NBA team per-game benchmarks, used only to shade stats above/below a realistic baseline.
+const LEAGUE_AVERAGE = {
+  pointsPerGame: 113,
+  reboundsPerGame: 43.5,
+  assistsPerGame: 25.5,
+  stealsPerGame: 7.5,
+  blocksPerGame: 4.8,
+  fieldGoalPct: 46.5,
+  threePointPct: 36.5,
+  winPct: 50,
+};
+
 interface StatCardProps {
   label: string;
   value: string;
   helper: string;
+  heat?: 'hot' | 'cold' | null;
 }
 
 function formatStat(value: number): string {
   return value.toFixed(1);
+}
+
+function getHeat(value: number, benchmark: number): 'hot' | 'cold' | null {
+  if (value > benchmark * 1.1) {
+    return 'hot';
+  }
+
+  if (value < benchmark * 0.9) {
+    return 'cold';
+  }
+
+  return null;
 }
 
 function getWinPercentage(stats: TeamStats): number {
@@ -66,13 +80,31 @@ function buildTeamAnalysis(team: Team, stats?: TeamStats, rosterCount = 0): stri
   return 'Balanced team with steady production across major categories and a competitive regular-season profile.';
 }
 
-function StatCard({ label, value, helper }: StatCardProps) {
+function Divider() {
+  return <span className="h-3 w-px bg-rule" aria-hidden="true" />;
+}
+
+function StatCard({ label, value, helper, heat }: StatCardProps) {
+  const heatClass = heat === 'hot' ? 'bg-score-orange/10' : heat === 'cold' ? 'bg-live-cyan/10' : '';
+
   return (
-    <article className="rounded-lg border border-white/10 bg-zinc-900/80 p-5 shadow-lg shadow-black/20">
-      <p className="text-sm font-medium text-zinc-400">{label}</p>
-      <p className="mt-2 text-3xl font-semibold text-white">{value}</p>
-      <p className="mt-2 text-xs text-zinc-500">{helper}</p>
+    <article className={`border-t border-rule bg-ink-900 p-5 ${heatClass}`}>
+      <p className="text-sm text-text-secondary">{label}</p>
+      <p className="mt-2 font-display text-3xl font-semibold text-text-primary">{value}</p>
+      <p className="mt-2 text-xs text-text-secondary">{helper}</p>
     </article>
+  );
+}
+
+function BackLink({ to, label }: { to: string; label: string }) {
+  return (
+    <Link
+      to={to}
+      className="mb-6 inline-flex h-10 items-center gap-2 border border-rule px-4 text-sm font-medium text-text-secondary transition-colors hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-live-cyan/60"
+    >
+      <ArrowLeft className="size-4" aria-hidden="true" />
+      {label}
+    </Link>
   );
 }
 
@@ -135,9 +167,9 @@ export function TeamDetail() {
   if (isLoading) {
     return (
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <div className="flex min-h-96 items-center justify-center rounded-lg border border-white/10 bg-zinc-900/70">
-          <div className="flex items-center gap-3 text-sm font-medium text-zinc-300">
-            <Loader2 className="size-5 animate-spin text-red-300" aria-hidden="true" />
+        <div className="flex min-h-96 items-center justify-center border border-rule bg-ink-900">
+          <div className="flex items-center gap-3 text-sm font-medium text-text-secondary">
+            <Loader2 className="size-5 animate-spin text-score-orange" aria-hidden="true" />
             Loading team profile
           </div>
         </div>
@@ -148,19 +180,13 @@ export function TeamDetail() {
   if (error) {
     return (
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <Link
-          to="/teams"
-          className="mb-6 inline-flex h-10 items-center gap-2 rounded-lg border border-white/10 px-4 text-sm font-medium text-zinc-200 transition hover:bg-white/10 hover:text-white"
-        >
-          <ArrowLeft className="size-4" aria-hidden="true" />
-          Back to Teams
-        </Link>
-        <div className="rounded-lg border border-red-400/30 bg-red-500/10 p-5 text-sm text-red-100">
+        <BackLink to="/teams" label="Back to Teams" />
+        <div className="border border-down/30 bg-down/10 p-5 text-sm text-text-primary">
           <div className="flex items-start gap-3">
-            <AlertCircle className="mt-0.5 size-5 shrink-0" aria-hidden="true" />
+            <AlertCircle className="mt-0.5 size-5 shrink-0 text-down" aria-hidden="true" />
             <div>
-              <h1 className="font-semibold text-white">Unable to load team</h1>
-              <p className="mt-1 text-red-100/80">{error}</p>
+              <h1 className="font-display text-lg font-semibold text-text-primary">Unable to load team</h1>
+              <p className="mt-1 text-text-secondary">{error}</p>
             </div>
           </div>
         </div>
@@ -171,16 +197,10 @@ export function TeamDetail() {
   if (!team) {
     return (
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <Link
-          to="/teams"
-          className="mb-6 inline-flex h-10 items-center gap-2 rounded-lg border border-white/10 px-4 text-sm font-medium text-zinc-200 transition hover:bg-white/10 hover:text-white"
-        >
-          <ArrowLeft className="size-4" aria-hidden="true" />
-          Back to Teams
-        </Link>
-        <div className="rounded-lg border border-white/10 bg-zinc-900/70 p-8 text-center">
-          <h1 className="text-2xl font-semibold text-white">Team not found</h1>
-          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-zinc-400">
+        <BackLink to="/teams" label="Back to Teams" />
+        <div className="border border-rule bg-ink-900 p-8 text-center">
+          <h1 className="font-display text-2xl font-semibold text-text-primary">Team not found</h1>
+          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-text-secondary">
             This team does not exist in the current mock dataset.
           </p>
         </div>
@@ -190,57 +210,40 @@ export function TeamDetail() {
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-      <Link
-        to="/teams"
-        className="mb-6 inline-flex h-10 items-center gap-2 rounded-lg border border-white/10 px-4 text-sm font-medium text-zinc-200 transition hover:bg-white/10 hover:text-white"
-      >
-        <ArrowLeft className="size-4" aria-hidden="true" />
-        Back to Teams
-      </Link>
+      <BackLink to="/teams" label="Back to Teams" />
 
-      <div className="overflow-hidden rounded-lg border border-white/10 bg-zinc-900/70 shadow-2xl shadow-black/30">
-        <div className="relative">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(220,38,38,0.26),_transparent_34%),linear-gradient(135deg,_rgba(39,39,42,0.96),_rgba(9,9,11,1)_65%)]" />
-          <div className="relative px-5 py-8 sm:px-8 lg:px-10">
-            <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-              <div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <p className="text-sm font-medium text-red-300">{team.city}</p>
-                  <DataSourceBadge source="mock" />
-                </div>
-                <h1 className="mt-3 text-4xl font-bold tracking-normal text-white sm:text-5xl">
-                  {team.fullName}
-                </h1>
-                <div className="mt-5 flex flex-wrap gap-3 text-sm text-zinc-300">
-                  <span className="inline-flex items-center gap-2 rounded-lg bg-white/[0.06] px-3 py-2">
-                    <Shield className="size-4 text-red-300" aria-hidden="true" />
-                    {team.conference} Conference
-                  </span>
-                  <span className="inline-flex items-center gap-2 rounded-lg bg-white/[0.06] px-3 py-2">
-                    <Flag className="size-4 text-red-300" aria-hidden="true" />
-                    {team.division}
-                  </span>
-                  <span className="inline-flex items-center gap-2 rounded-lg bg-white/[0.06] px-3 py-2">
-                    <Trophy className="size-4 text-red-300" aria-hidden="true" />
-                    {team.abbreviation}
-                  </span>
-                </div>
+      <div className="relative border-b border-rule pb-8">
+        <div className="absolute left-0 top-0 h-[3px] w-16 -skew-x-[20deg] bg-score-orange" aria-hidden="true" />
+        <div className="pt-6">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                <p className="text-sm font-medium text-ledger-blue">{team.city}</p>
+                <DataSourceBadge source="mock" />
               </div>
-              <div className="grid grid-cols-3 gap-3 sm:w-full sm:max-w-md">
-                <div className="rounded-lg bg-white/[0.06] p-3 text-center">
-                  <p className="text-2xl font-semibold text-white">{stats?.wins ?? 'N/A'}</p>
-                  <p className="mt-1 text-xs text-zinc-400">Wins</p>
-                </div>
-                <div className="rounded-lg bg-white/[0.06] p-3 text-center">
-                  <p className="text-2xl font-semibold text-white">{stats?.losses ?? 'N/A'}</p>
-                  <p className="mt-1 text-xs text-zinc-400">Losses</p>
-                </div>
-                <div className="rounded-lg bg-white/[0.06] p-3 text-center">
-                  <p className="text-2xl font-semibold text-white">
-                    {stats ? `${formatStat(getWinPercentage(stats))}%` : 'N/A'}
-                  </p>
-                  <p className="mt-1 text-xs text-zinc-400">Win %</p>
-                </div>
+              <h1 className="mt-3 font-display text-4xl font-bold text-text-primary sm:text-5xl">{team.fullName}</h1>
+              <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-text-secondary">
+                <span>{team.conference} Conference</span>
+                <Divider />
+                <span>{team.division}</span>
+                <Divider />
+                <span>{team.abbreviation}</span>
+              </div>
+            </div>
+            <div className="grid grid-cols-3 divide-x divide-rule border border-rule sm:w-full sm:max-w-md">
+              <div className="p-3 text-center">
+                <p className="font-display text-2xl font-bold text-text-primary">{stats?.wins ?? 'N/A'}</p>
+                <p className="mt-1 text-xs text-text-secondary">Wins</p>
+              </div>
+              <div className="p-3 text-center">
+                <p className="font-display text-2xl font-bold text-text-primary">{stats?.losses ?? 'N/A'}</p>
+                <p className="mt-1 text-xs text-text-secondary">Losses</p>
+              </div>
+              <div className="p-3 text-center">
+                <p className="font-display text-2xl font-bold text-text-primary">
+                  {stats ? `${formatStat(getWinPercentage(stats))}%` : 'N/A'}
+                </p>
+                <p className="mt-1 text-xs text-text-secondary">Win %</p>
               </div>
             </div>
           </div>
@@ -248,39 +251,36 @@ export function TeamDetail() {
       </div>
 
       <div className="mt-8 grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
-        <section className="rounded-lg border border-white/10 bg-zinc-900/80 p-5 shadow-xl shadow-black/20">
-          <div className="flex items-center gap-2 text-sm font-medium text-red-300">
-            <Activity className="size-4" aria-hidden="true" />
-            Record
-          </div>
+        <section className="border-t border-rule bg-ink-900 p-5">
+          <p className="font-body text-sm text-text-secondary">Record</p>
           {stats ? (
-            <dl className="mt-5 grid gap-3 sm:grid-cols-3">
-              <div className="rounded-lg bg-white/[0.04] p-4">
-                <dt className="text-sm text-zinc-500">Wins</dt>
-                <dd className="mt-2 text-2xl font-semibold text-white">{stats.wins}</dd>
+            <dl className="mt-4 divide-y divide-rule border-t border-rule">
+              <div className="flex items-center justify-between py-3">
+                <dt className="text-sm text-text-secondary">Wins</dt>
+                <dd className="font-display text-lg font-semibold text-text-primary">{stats.wins}</dd>
               </div>
-              <div className="rounded-lg bg-white/[0.04] p-4">
-                <dt className="text-sm text-zinc-500">Losses</dt>
-                <dd className="mt-2 text-2xl font-semibold text-white">{stats.losses}</dd>
+              <div className="flex items-center justify-between py-3">
+                <dt className="text-sm text-text-secondary">Losses</dt>
+                <dd className="font-display text-lg font-semibold text-text-primary">{stats.losses}</dd>
               </div>
-              <div className="rounded-lg bg-white/[0.04] p-4">
-                <dt className="text-sm text-zinc-500">Conf. Rank</dt>
-                <dd className="mt-2 text-2xl font-semibold text-white">#{stats.conferenceRank}</dd>
+              <div className="flex items-center justify-between py-3">
+                <dt className="text-sm text-text-secondary">Conference rank</dt>
+                <dd className="font-display text-lg font-semibold text-text-primary">#{stats.conferenceRank}</dd>
               </div>
             </dl>
           ) : (
-            <p className="mt-4 text-sm text-zinc-400">No team record available yet.</p>
+            <p className="mt-4 text-sm text-text-secondary">No team record available yet.</p>
           )}
         </section>
 
-        <section className="rounded-lg border border-white/10 bg-zinc-900/80 p-5 shadow-xl shadow-black/20">
-          <div className="flex items-center gap-2 text-sm font-medium text-red-300">
-            <Sparkles className="size-4" aria-hidden="true" />
+        <section className="border-t border-rule bg-ink-900 p-5">
+          <div className="flex items-center gap-2 text-sm text-text-secondary">
+            <Sparkles className="size-4 text-score-orange" aria-hidden="true" />
             Analysis
           </div>
-          <h2 className="mt-4 text-2xl font-semibold text-white">Team read</h2>
-          <p className="mt-3 text-sm leading-7 text-zinc-300">{analysis}</p>
-          <div className="mt-5 flex items-center gap-2 text-sm text-zinc-500">
+          <h2 className="mt-4 font-display text-2xl font-semibold text-text-primary">Team read</h2>
+          <p className="mt-3 text-sm leading-7 text-text-secondary">{analysis}</p>
+          <div className="mt-5 flex items-center gap-2 text-sm text-text-secondary">
             <Users className="size-4" aria-hidden="true" />
             {roster.length} players in current mock roster
           </div>
@@ -288,25 +288,65 @@ export function TeamDetail() {
       </div>
 
       <section className="mt-8">
-        <div className="mb-5 flex items-center gap-2 text-sm font-medium text-red-300">
-          <BadgePercent className="size-4" aria-hidden="true" />
-          Team Stats
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-2">
+          <p className="font-body text-sm text-text-secondary">Team stats</p>
+          {stats ? <HeatLegend label="league average" /> : null}
         </div>
         {stats ? (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <StatCard label="PPG" value={formatStat(stats.pointsPerGame)} helper="Points per game" />
-            <StatCard label="RPG" value={formatStat(stats.reboundsPerGame)} helper="Rebounds per game" />
-            <StatCard label="APG" value={formatStat(stats.assistsPerGame)} helper="Assists per game" />
-            <StatCard label="SPG" value={formatStat(stats.stealsPerGame)} helper="Steals per game" />
-            <StatCard label="BPG" value={formatStat(stats.blocksPerGame)} helper="Blocks per game" />
-            <StatCard label="FG%" value={`${formatStat(stats.fieldGoalPct)}%`} helper="Field goal percentage" />
-            <StatCard label="3PT%" value={`${formatStat(stats.threePointPct)}%`} helper="Three-point percentage" />
-            <StatCard label="Win %" value={`${formatStat(getWinPercentage(stats))}%`} helper="Regular-season win rate" />
+            <StatCard
+              label="PPG"
+              value={formatStat(stats.pointsPerGame)}
+              helper="Points per game"
+              heat={getHeat(stats.pointsPerGame, LEAGUE_AVERAGE.pointsPerGame)}
+            />
+            <StatCard
+              label="RPG"
+              value={formatStat(stats.reboundsPerGame)}
+              helper="Rebounds per game"
+              heat={getHeat(stats.reboundsPerGame, LEAGUE_AVERAGE.reboundsPerGame)}
+            />
+            <StatCard
+              label="APG"
+              value={formatStat(stats.assistsPerGame)}
+              helper="Assists per game"
+              heat={getHeat(stats.assistsPerGame, LEAGUE_AVERAGE.assistsPerGame)}
+            />
+            <StatCard
+              label="SPG"
+              value={formatStat(stats.stealsPerGame)}
+              helper="Steals per game"
+              heat={getHeat(stats.stealsPerGame, LEAGUE_AVERAGE.stealsPerGame)}
+            />
+            <StatCard
+              label="BPG"
+              value={formatStat(stats.blocksPerGame)}
+              helper="Blocks per game"
+              heat={getHeat(stats.blocksPerGame, LEAGUE_AVERAGE.blocksPerGame)}
+            />
+            <StatCard
+              label="FG%"
+              value={`${formatStat(stats.fieldGoalPct)}%`}
+              helper="Field goal percentage"
+              heat={getHeat(stats.fieldGoalPct, LEAGUE_AVERAGE.fieldGoalPct)}
+            />
+            <StatCard
+              label="3PT%"
+              value={`${formatStat(stats.threePointPct)}%`}
+              helper="Three-point percentage"
+              heat={getHeat(stats.threePointPct, LEAGUE_AVERAGE.threePointPct)}
+            />
+            <StatCard
+              label="Win %"
+              value={`${formatStat(getWinPercentage(stats))}%`}
+              helper="Regular-season win rate"
+              heat={getHeat(getWinPercentage(stats), LEAGUE_AVERAGE.winPct)}
+            />
           </div>
         ) : (
-          <div className="rounded-lg border border-white/10 bg-zinc-900/70 p-8 text-center">
-            <h2 className="text-xl font-semibold text-white">No team stats available</h2>
-            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-zinc-400">
+          <div className="border border-rule bg-ink-900 p-8 text-center">
+            <h2 className="font-display text-xl font-semibold text-text-primary">No team stats available</h2>
+            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-text-secondary">
               This team exists in the directory, but has no mock aggregate statistics yet.
             </p>
           </div>
@@ -314,38 +354,34 @@ export function TeamDetail() {
       </section>
 
       <section className="mt-8">
-        <div className="mb-5 flex items-center gap-2 text-sm font-medium text-red-300">
-          <Users className="size-4" aria-hidden="true" />
-          Roster
-        </div>
+        <p className="mb-5 font-body text-sm text-text-secondary">Roster</p>
         {roster.length > 0 ? (
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {roster.map((player) => (
               <Link
                 key={player.id}
                 to={`/players/${player.id}`}
-                className="rounded-lg border border-white/10 bg-zinc-900/80 p-5 shadow-lg shadow-black/20 transition hover:-translate-y-0.5 hover:border-red-400/50 hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-red-500/40"
+                className="block border-t border-rule bg-ink-900 p-5 transition-colors hover:bg-ledger-blue/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-live-cyan/60"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-sm font-medium text-red-300">{player.position}</p>
-                    <h3 className="mt-1 text-lg font-semibold text-white">{player.fullName}</h3>
+                    <p className="text-sm font-medium text-ledger-blue">{player.position}</p>
+                    <h3 className="mt-1 font-display text-lg font-semibold text-text-primary">{player.fullName}</h3>
                   </div>
-                  <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-red-500/15 text-sm font-bold text-red-200">
-                    {player.age}
-                  </span>
+                  <span className="font-display text-2xl font-bold text-score-orange">{player.age}</span>
                 </div>
-                <div className="mt-5 flex items-center gap-2 text-sm text-zinc-400">
-                  <Gauge className="size-4" aria-hidden="true" />
-                  {player.height} - {player.weight}
+                <div className="mt-4 flex items-center gap-3 border-t border-rule pt-3 text-sm text-text-secondary">
+                  <span>{player.height}</span>
+                  <Divider />
+                  <span>{player.weight}</span>
                 </div>
               </Link>
             ))}
           </div>
         ) : (
-          <div className="rounded-lg border border-white/10 bg-zinc-900/70 p-8 text-center">
-            <h2 className="text-xl font-semibold text-white">Empty roster</h2>
-            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-zinc-400">
+          <div className="border border-rule bg-ink-900 p-8 text-center">
+            <h2 className="font-display text-xl font-semibold text-text-primary">Empty roster</h2>
+            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-text-secondary">
               No mock players are currently assigned to this team.
             </p>
           </div>

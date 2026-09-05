@@ -1,3 +1,4 @@
+import { HeatLegend } from './HeatLegend';
 import { calculatePlayerEfficiency } from '../services/nbaService';
 import type { PlayerStats } from '../types/playerStats';
 
@@ -16,69 +17,128 @@ function formatStat(value: number): string {
   return value.toFixed(1);
 }
 
-function getColumnValue(player: PlayerStats, key: StatsTableColumn['key']) {
+function getNumericValue(player: PlayerStats, key: StatsTableColumn['key']): number {
   if (key === 'points') {
-    return formatStat(player.pointsPerGame);
+    return player.pointsPerGame;
   }
 
   if (key === 'rebounds') {
-    return formatStat(player.reboundsPerGame);
+    return player.reboundsPerGame;
   }
 
   if (key === 'assists') {
-    return formatStat(player.assistsPerGame);
+    return player.assistsPerGame;
   }
 
   if (key === 'efficiency') {
-    return formatStat(calculatePlayerEfficiency(player));
+    return calculatePlayerEfficiency(player);
   }
 
   if (key === 'minutes') {
-    return formatStat(player.minutesPerGame);
+    return player.minutesPerGame;
   }
 
-  return `${formatStat(player.fieldGoalPct)}% / ${formatStat(player.threePointPct)}%`;
+  return player.fieldGoalPct;
+}
+
+function getColumnDisplay(player: PlayerStats, key: StatsTableColumn['key']): string {
+  if (key === 'shooting') {
+    return `${formatStat(player.fieldGoalPct)}% / ${formatStat(player.threePointPct)}%`;
+  }
+
+  return formatStat(getNumericValue(player, key));
+}
+
+function getColumnStats(players: PlayerStats[], key: StatsTableColumn['key']) {
+  const values = players.map((player) => getNumericValue(player, key));
+  const mean = values.reduce((sum, value) => sum + value, 0) / values.length;
+  const variance = values.reduce((sum, value) => sum + (value - mean) ** 2, 0) / values.length;
+
+  return { mean, spread: Math.sqrt(variance), max: Math.max(...values) };
+}
+
+function getHeatClass(value: number, mean: number, spread: number): string {
+  if (spread === 0) {
+    return '';
+  }
+
+  const deviation = (value - mean) / spread;
+
+  if (deviation > 0.4) {
+    return 'bg-score-orange/10';
+  }
+
+  if (deviation < -0.4) {
+    return 'bg-live-cyan/10';
+  }
+
+  return '';
 }
 
 export function StatsTable({ title, players, columns }: StatsTableProps) {
+  const columnStats = columns.map((column) => getColumnStats(players, column.key));
+  const showsLeaders = players.length > 1;
+
   return (
-    <div className="overflow-hidden rounded-lg border border-white/10 bg-zinc-900/80 shadow-xl shadow-black/20">
-      <div className="border-b border-white/10 px-5 py-4">
-        <h3 className="text-lg font-semibold text-white">{title}</h3>
+    <div className="border border-rule bg-ink-900">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-rule px-5 py-4">
+        <h3 className="font-display text-lg font-semibold text-text-primary">{title}</h3>
+        {showsLeaders ? <HeatLegend /> : null}
       </div>
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-white/10 text-left text-sm">
-          <thead className="bg-white/[0.03] text-xs uppercase text-zinc-500">
+        <table className="min-w-full divide-y divide-rule text-left text-sm">
+          <thead className="text-xs text-text-secondary">
             <tr>
-              <th className="w-12 px-5 py-3 font-semibold">#</th>
-              <th className="min-w-56 px-5 py-3 font-semibold">Player</th>
-              <th className="min-w-48 px-5 py-3 font-semibold">Team</th>
+              <th scope="col" className="w-12 px-5 py-3 font-medium">#</th>
+              <th scope="col" className="min-w-56 px-5 py-3 font-medium">Player</th>
+              <th scope="col" className="min-w-48 px-5 py-3 font-medium">Team</th>
               {columns.map((column) => (
-                <th key={column.key} className="whitespace-nowrap px-5 py-3 font-semibold">
+                <th key={column.key} scope="col" className="whitespace-nowrap px-5 py-3 font-medium">
                   {column.label}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/10">
+          <tbody className="divide-y divide-rule">
             {players.map((player, index) => (
-              <tr key={player.playerId} className="transition hover:bg-white/[0.03]">
-                <td className="px-5 py-4 font-semibold text-zinc-500">{index + 1}</td>
+              <tr key={player.playerId} className="transition-colors hover:bg-white/[0.02]">
+                <td className="px-5 py-4 font-display text-text-secondary">{index + 1}</td>
                 <td className="px-5 py-4">
-                  <div className="font-semibold text-white">{player.playerName}</div>
-                  <div className="mt-1 text-xs text-zinc-500">{player.gamesPlayed} GP</div>
+                  <div className="font-medium text-text-primary">{player.playerName}</div>
+                  <div className="mt-1 text-xs text-text-secondary">{player.gamesPlayed} GP</div>
                 </td>
-                <td className="px-5 py-4 text-zinc-300">{player.teamName}</td>
-                {columns.map((column) => (
-                  <td key={column.key} className="whitespace-nowrap px-5 py-4 font-medium text-zinc-100">
-                    {getColumnValue(player, column.key)}
-                  </td>
-                ))}
+                <td className="px-5 py-4 text-text-secondary">{player.teamName}</td>
+                {columns.map((column, columnIndex) => {
+                  const numericValue = getNumericValue(player, column.key);
+                  const { mean, spread, max } = columnStats[columnIndex];
+                  const isLeader = showsLeaders && numericValue === max;
+
+                  return (
+                    <td
+                      key={column.key}
+                      className={`whitespace-nowrap px-5 py-4 font-display tabular-nums text-text-primary ${getHeatClass(
+                        numericValue,
+                        mean,
+                        spread,
+                      )}`}
+                    >
+                      {getColumnDisplay(player, column.key)}
+                      {isLeader ? (
+                        <span className="ml-1 text-score-orange" aria-label="Category leader">
+                          *
+                        </span>
+                      ) : null}
+                    </td>
+                  );
+                })}
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      {showsLeaders ? (
+        <p className="border-t border-rule px-5 py-3 text-xs text-text-secondary">* Category leader in this list.</p>
+      ) : null}
     </div>
   );
 }

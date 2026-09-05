@@ -1,6 +1,7 @@
 import { AlertCircle, Loader2, RotateCcw } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { DataSourceBadge } from '../components/DataSourceBadge';
+import { PageHero } from '../components/PageHero';
 import { SearchInput } from '../components/SearchInput';
 import { SelectFilter, type SelectOption } from '../components/SelectFilter';
 import { TeamCard } from '../components/TeamCard';
@@ -91,23 +92,17 @@ export function TeamsPage() {
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-      <div className="flex flex-col gap-3 border-b border-white/10 pb-6 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="text-sm font-medium text-red-300">Teams</p>
-          <h1 className="mt-2 text-3xl font-bold text-white">NBA teams directory</h1>
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-400">
-            Search and filter the full mock dataset through a service layer prepared for real NBA data.
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <DataSourceBadge source="mock" />
-          <span className="w-fit rounded-full border border-white/10 px-3 py-1 text-sm font-medium text-zinc-300">
-            {isLoading ? 'Loading teams' : `${filteredTeams.length} of ${teams.length} teams`}
-          </span>
-        </div>
+      <PageHero
+        eyebrow="Teams"
+        title="NBA teams directory"
+        description="Search and filter the full mock dataset through a service layer prepared for real NBA data."
+        tags={[isLoading ? 'Loading teams' : `${filteredTeams.length} of ${teams.length} teams`]}
+      />
+      <div className="mt-4">
+        <DataSourceBadge source="mock" />
       </div>
 
-      <div className="mt-8 rounded-lg border border-white/10 bg-white/[0.03] p-4 shadow-xl shadow-black/20">
+      <div className="mt-8 border-t border-rule bg-ink-900 p-4">
         <div className="grid gap-4 lg:grid-cols-[1fr_180px_220px_auto] lg:items-end">
           <SearchInput
             id="team-search"
@@ -131,7 +126,7 @@ export function TeamsPage() {
             onChange={(value) => setDivision(value as Division | typeof allValue)}
           />
           <button
-            className="flex h-11 items-center justify-center gap-2 rounded-lg border border-white/10 px-4 text-sm font-medium text-zinc-200 transition hover:bg-white/10 hover:text-white"
+            className="flex h-11 items-center justify-center gap-2 border border-rule px-4 text-sm font-medium text-text-secondary transition-colors hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-live-cyan/60"
             type="button"
             onClick={resetFilters}
           >
@@ -142,34 +137,34 @@ export function TeamsPage() {
       </div>
 
       {isLoading ? (
-        <div className="mt-8 flex min-h-64 items-center justify-center rounded-lg border border-white/10 bg-zinc-900/70">
-          <div className="flex items-center gap-3 text-sm font-medium text-zinc-300">
-            <Loader2 className="size-5 animate-spin text-red-300" aria-hidden="true" />
+        <div className="mt-8 flex min-h-64 items-center justify-center border border-rule bg-ink-900">
+          <div className="flex items-center gap-3 text-sm font-medium text-text-secondary">
+            <Loader2 className="size-5 animate-spin text-score-orange" aria-hidden="true" />
             Loading NBA teams
           </div>
         </div>
       ) : null}
 
       {error ? (
-        <div className="mt-8 rounded-lg border border-red-400/30 bg-red-500/10 p-5 text-sm text-red-100">
+        <div className="mt-8 border border-down/30 bg-down/10 p-5 text-sm text-text-primary">
           <div className="flex items-start gap-3">
-            <AlertCircle className="mt-0.5 size-5 shrink-0" aria-hidden="true" />
+            <AlertCircle className="mt-0.5 size-5 shrink-0 text-down" aria-hidden="true" />
             <div>
-              <h2 className="font-semibold text-white">Unable to load teams</h2>
-              <p className="mt-1 text-red-100/80">{error}</p>
+              <h2 className="font-display text-base font-semibold text-text-primary">Unable to load teams</h2>
+              <p className="mt-1 text-text-secondary">{error}</p>
             </div>
           </div>
         </div>
       ) : null}
 
       {!isLoading && !error && filteredTeams.length === 0 ? (
-        <div className="mt-8 rounded-lg border border-white/10 bg-zinc-900/70 p-8 text-center">
-          <h2 className="text-xl font-semibold text-white">No teams found</h2>
-          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-zinc-400">
+        <div className="mt-8 border border-rule bg-ink-900 p-8 text-center">
+          <h2 className="font-display text-xl font-semibold text-text-primary">No teams found</h2>
+          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-text-secondary">
             Try a different search term or clear one of the filters.
           </p>
           <button
-            className="mt-5 inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-white px-4 text-sm font-semibold text-zinc-950 transition hover:bg-zinc-200"
+            className="mt-5 inline-flex h-10 items-center justify-center gap-2 bg-score-orange px-4 text-sm font-semibold text-ink-950 transition-colors hover:bg-score-orange/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-live-cyan/60"
             type="button"
             onClick={resetFilters}
           >

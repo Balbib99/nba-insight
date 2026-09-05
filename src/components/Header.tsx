@@ -1,5 +1,4 @@
 import {
-  Activity,
   ArrowRightLeft,
   BarChart3,
   CalendarDays,
@@ -30,6 +29,32 @@ const moreNavItems = [
   { label: 'Favorites', path: '/favorites', icon: Heart },
 ];
 
+function NavItem({ label, path, icon: Icon }: (typeof navItems)[number]) {
+  return (
+    <NavLink
+      to={path}
+      className={({ isActive }) =>
+        `group relative flex h-9 shrink-0 items-center gap-1.5 px-2.5 font-body text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-live-cyan/60 ${
+          isActive ? 'text-text-primary' : 'text-text-secondary hover:text-text-primary'
+        }`
+      }
+    >
+      {({ isActive }) => (
+        <>
+          <Icon className="size-4" aria-hidden="true" />
+          {label}
+          <span
+            aria-hidden="true"
+            className={`absolute -bottom-[7px] left-2 right-2 h-[2px] -skew-x-[20deg] bg-score-orange transition-opacity ${
+              isActive ? 'opacity-100' : 'opacity-0'
+            }`}
+          />
+        </>
+      )}
+    </NavLink>
+  );
+}
+
 export function Header() {
   const { isDemoMode, isAuthenticated, logout, user } = useAuth();
   const navigate = useNavigate();
@@ -40,47 +65,36 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-20 border-b border-white/10 bg-zinc-950/90 backdrop-blur-xl">
+    <header className="sticky top-0 z-20 border-b border-rule bg-ink-950/95">
       <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-        <NavLink to="/" className="flex w-fit items-center gap-3" aria-label="NBA Insight home">
-          <span className="flex size-10 items-center justify-center rounded-lg bg-red-600 text-white shadow-lg shadow-red-950/40">
-            <Activity className="size-5" aria-hidden="true" />
+        <NavLink
+          to="/"
+          className="flex w-fit flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-live-cyan/60"
+          aria-label="NBA Insight home"
+        >
+          <span className="font-display text-2xl font-semibold leading-none tracking-tight text-text-primary">
+            NBA Insight
           </span>
-          <span className="text-xl font-semibold tracking-normal text-white">NBA Insight</span>
+          <span className="mt-1.5 h-[3px] w-16 -skew-x-[20deg] bg-score-orange" aria-hidden="true" />
         </NavLink>
 
-        <nav className="flex flex-wrap items-center gap-1.5" aria-label="Main navigation">
-          {navItems.map(({ label, path, icon: Icon }) => (
-            <NavLink
-              key={path}
-              to={path}
-              className={({ isActive }) =>
-                `flex h-9 shrink-0 items-center gap-1.5 rounded-lg px-2.5 text-xs font-medium transition xl:h-10 xl:px-3 xl:text-sm ${
-                  isActive
-                    ? 'bg-white text-zinc-950 shadow-lg shadow-black/20'
-                    : 'text-zinc-300 hover:bg-white/10 hover:text-white'
-                }`
-              }
-            >
-              <Icon className="size-4" aria-hidden="true" />
-              {label}
-            </NavLink>
+        <nav className="flex flex-wrap items-center gap-1" aria-label="Main navigation">
+          {navItems.map((item) => (
+            <NavItem key={item.path} {...item} />
           ))}
           <details className="group relative">
-            <summary className="flex h-9 cursor-pointer list-none items-center gap-1.5 rounded-lg px-2.5 text-xs font-medium text-zinc-300 transition hover:bg-white/10 hover:text-white marker:hidden xl:h-10 xl:px-3 xl:text-sm">
+            <summary className="flex h-9 cursor-pointer list-none items-center gap-1.5 px-2.5 font-body text-sm font-medium text-text-secondary transition-colors marker:hidden hover:text-text-primary">
               <MoreHorizontal className="size-4" aria-hidden="true" />
               More
             </summary>
-            <div className="absolute left-0 top-11 z-30 min-w-44 rounded-lg border border-white/10 bg-zinc-950 p-1.5 shadow-2xl shadow-black/40">
+            <div className="absolute left-0 top-11 z-30 min-w-44 border border-rule bg-ink-900 p-1.5">
               {moreNavItems.map(({ label, path, icon: Icon }) => (
                 <NavLink
                   key={path}
                   to={path}
                   className={({ isActive }) =>
-                    `flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium transition ${
-                      isActive
-                        ? 'bg-white text-zinc-950'
-                        : 'text-zinc-300 hover:bg-white/10 hover:text-white'
+                    `flex h-9 items-center gap-2 px-3 font-body text-sm font-medium transition-colors ${
+                      isActive ? 'text-text-primary' : 'text-text-secondary hover:text-text-primary'
                     }`
                   }
                 >
@@ -95,29 +109,29 @@ export function Header() {
         <div className="flex shrink-0 flex-wrap items-center gap-2">
           {isDemoMode ? (
             <>
-              <span className="rounded-lg border border-sky-300/30 bg-sky-400/10 px-3 py-1 text-xs font-semibold text-sky-100">
-                Demo Mode
+              <span className="border border-rule px-3 py-1 font-body text-xs font-medium text-text-secondary">
+                Demo mode
               </span>
               <button
                 type="button"
                 onClick={handleLogout}
-                className="inline-flex h-10 items-center justify-center rounded-lg border border-white/10 px-3 text-sm font-semibold text-zinc-200 transition hover:bg-white/10 hover:text-white"
+                className="inline-flex h-9 items-center justify-center border border-rule px-3 font-body text-sm font-medium text-text-secondary transition-colors hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-live-cyan/60"
               >
-                Exit Demo
+                Exit demo
               </button>
             </>
           ) : null}
 
           {isAuthenticated && user ? (
             <>
-              <span className="inline-flex h-10 max-w-48 items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3 text-sm font-medium text-zinc-200">
-                <UserRound className="size-4 shrink-0 text-zinc-400" aria-hidden="true" />
+              <span className="inline-flex h-9 max-w-48 items-center gap-2 font-body text-sm text-text-secondary">
+                <UserRound className="size-4 shrink-0" aria-hidden="true" />
                 <span className="truncate">{user.name || user.email}</span>
               </span>
               <button
                 type="button"
                 onClick={handleLogout}
-                className="inline-flex h-10 items-center justify-center rounded-lg border border-white/10 px-3 text-sm font-semibold text-zinc-200 transition hover:bg-white/10 hover:text-white"
+                className="inline-flex h-9 items-center justify-center border border-rule px-3 font-body text-sm font-medium text-text-secondary transition-colors hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-live-cyan/60"
               >
                 Log out
               </button>
@@ -127,7 +141,7 @@ export function Header() {
           {!isDemoMode && !isAuthenticated ? (
             <Link
               to="/auth"
-              className="inline-flex h-10 items-center justify-center rounded-lg bg-white px-3 text-sm font-semibold text-zinc-950 transition hover:bg-zinc-200"
+              className="inline-flex h-9 items-center justify-center bg-score-orange px-3.5 font-body text-sm font-semibold text-ink-950 transition-colors hover:bg-score-orange/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-live-cyan/60"
             >
               Sign in
             </Link>

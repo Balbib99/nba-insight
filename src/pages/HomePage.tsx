@@ -73,6 +73,14 @@ const dataSources = [
   },
 ];
 
+const stackRows = [
+  { layer: 'Frontend views', tech: 'React' },
+  { layer: 'Node API', tech: 'Node / Express' },
+  { layer: 'PostgreSQL cache', tech: 'PostgreSQL' },
+  { layer: 'Python analytics', tech: 'FastAPI' },
+  { layer: 'External providers', tech: 'nba_api / API-Sports' },
+];
+
 const architectureNodes = [
   { label: 'Frontend React', description: 'Vite, TypeScript, Tailwind', icon: Code2 },
   { label: 'Node/Express API Gateway', description: 'REST API and service orchestration', icon: Server },
@@ -116,106 +124,70 @@ function SectionHeading({
   description?: string;
 }) {
   return (
-    <div>
-      <p className="text-sm font-semibold text-red-300">{eyebrow}</p>
-      <h2 className="mt-2 text-3xl font-bold tracking-normal text-white">{title}</h2>
-      {description ? <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-400">{description}</p> : null}
+    <div className="border-t border-rule pt-6">
+      <p className="font-body text-sm text-text-secondary">{eyebrow}</p>
+      <h2 className="mt-2 font-display text-3xl font-semibold text-text-primary">{title}</h2>
+      {description ? <p className="mt-3 max-w-2xl text-sm leading-6 text-text-secondary">{description}</p> : null}
     </div>
   );
 }
 
 export function HomePage() {
   return (
-    <div className="bg-zinc-950">
-      <section className="relative overflow-hidden border-b border-white/10">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(220,38,38,0.24),_transparent_30%),radial-gradient(circle_at_top_right,_rgba(14,165,233,0.18),_transparent_30%),linear-gradient(135deg,_rgba(39,39,42,0.95),_rgba(9,9,11,1)_66%)]" />
+    <div className="bg-ink-950">
+      <section className="relative overflow-hidden border-b border-rule">
+        <div
+          className="scorebug-reveal absolute inset-0 bg-[linear-gradient(105deg,transparent_58%,rgba(255,107,26,0.10)_58%,rgba(255,107,26,0.10)_64%,transparent_64%,transparent_82%,rgba(47,211,201,0.06)_82%,rgba(47,211,201,0.06)_86%,transparent_86%)]"
+          aria-hidden="true"
+        />
         <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
           <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
             <div>
-                <div className="inline-flex items-center gap-2 rounded-lg border border-red-400/30 bg-red-500/10 px-3 py-1 text-sm font-semibold text-red-100">
-                  <BarChart3 className="size-4" aria-hidden="true" />
-                  Full-stack NBA analytics platform
-                </div>
-                <div className="mt-4">
-                  <DataModeBadge variant="full" />
-                </div>
-              <h1 className="mt-6 max-w-4xl text-5xl font-bold tracking-normal text-white sm:text-6xl lg:text-7xl">
+              <DataModeBadge variant="full" />
+              <h1 className="mt-6 max-w-4xl font-display text-6xl font-bold leading-[0.95] tracking-tight text-text-primary sm:text-7xl lg:text-8xl">
                 NBA Insight
               </h1>
-              <p className="mt-5 max-w-2xl text-xl font-semibold leading-8 text-zinc-100">
+              <p className="mt-5 max-w-2xl font-body text-xl font-medium leading-8 text-text-primary/90">
                 Full-stack NBA analytics platform
               </p>
-              <p className="mt-4 max-w-2xl text-sm leading-7 text-zinc-300 sm:text-base">
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-text-secondary sm:text-base">
                 Explore NBA teams, players, historical analytics, playoffs and data-driven comparisons.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Link
                   to="/analytics"
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-white px-4 text-sm font-semibold text-zinc-950 transition hover:bg-zinc-200"
+                  className="inline-flex h-11 items-center justify-center gap-2 bg-score-orange px-4 font-body text-sm font-semibold text-ink-950 transition-colors hover:bg-score-orange/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-live-cyan/60"
                 >
                   Explore Analytics
                   <ArrowRight className="size-4" aria-hidden="true" />
                 </Link>
                 <Link
                   to="/playoffs"
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-white/10 px-4 text-sm font-semibold text-zinc-200 transition hover:bg-white/10 hover:text-white"
+                  className="inline-flex h-11 items-center justify-center gap-2 border border-rule px-4 font-body text-sm font-semibold text-text-secondary transition-colors hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-live-cyan/60"
                 >
                   View Playoffs
                 </Link>
                 <Link
                   to="/compare"
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-white/10 px-4 text-sm font-semibold text-zinc-200 transition hover:bg-white/10 hover:text-white"
+                  className="inline-flex h-11 items-center justify-center gap-2 border border-rule px-4 font-body text-sm font-semibold text-text-secondary transition-colors hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-live-cyan/60"
                 >
                   Compare Players
                 </Link>
               </div>
             </div>
 
-            <div className="rounded-lg border border-white/10 bg-zinc-950/70 p-5 shadow-2xl shadow-black/40">
-              <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                <div>
-                  <p className="text-sm text-zinc-400">Platform snapshot</p>
-                  <p className="mt-1 text-2xl font-semibold text-white">Production-shaped demo</p>
-                </div>
-                <span className="rounded-lg bg-emerald-400/10 px-3 py-1 text-xs font-semibold text-emerald-300">
-                  Full stack
-                </span>
-              </div>
-              <div className="mt-5 grid grid-cols-3 gap-3 text-center">
-                <div className="rounded-lg bg-white/[0.04] p-4">
-                  <p className="text-2xl font-semibold text-white">React</p>
-                  <p className="mt-1 text-xs text-zinc-500">Frontend</p>
-                </div>
-                <div className="rounded-lg bg-white/[0.04] p-4">
-                  <p className="text-2xl font-semibold text-white">Node</p>
-                  <p className="mt-1 text-xs text-zinc-500">Gateway</p>
-                </div>
-                <div className="rounded-lg bg-white/[0.04] p-4">
-                  <p className="text-2xl font-semibold text-white">Python</p>
-                  <p className="mt-1 text-xs text-zinc-500">Service</p>
-                </div>
-              </div>
-              <div className="mt-5 rounded-lg bg-white/[0.04] p-4">
-                <div className="mb-4 flex items-center justify-between text-sm">
-                  <span className="font-medium text-zinc-300">Data pipeline coverage</span>
-                  <span className="text-red-200">Gateway-first</span>
-                </div>
-                <div className="space-y-3">
-                  {['Frontend views', 'Node API', 'PostgreSQL cache', 'Python analytics', 'External providers'].map(
-                    (item, index) => (
-                      <div key={item} className="flex items-center gap-3">
-                        <span className="flex size-7 items-center justify-center rounded-lg bg-red-500/15 text-xs font-bold text-red-200">
-                          {index + 1}
-                        </span>
-                        <div className="h-2 flex-1 overflow-hidden rounded-full bg-white/10">
-                          <div className="h-full rounded-full bg-gradient-to-r from-red-500 to-sky-300" />
-                        </div>
-                        <span className="w-32 text-right text-xs font-medium text-zinc-300">{item}</span>
-                      </div>
-                    ),
-                  )}
-                </div>
-              </div>
+            <div className="relative border border-rule bg-ink-900 p-6">
+              <div className="absolute -top-[3px] left-6 h-[3px] w-14 -skew-x-[20deg] bg-score-orange" aria-hidden="true" />
+              <p className="font-body text-sm text-text-secondary">Platform snapshot</p>
+              <p className="mt-1 font-display text-2xl font-semibold text-text-primary">Production-shaped demo</p>
+              <dl className="mt-6 divide-y divide-rule border-t border-rule">
+                {stackRows.map(({ layer, tech }) => (
+                  <div key={layer} className="flex items-center justify-between py-3">
+                    <dt className="text-sm text-text-secondary">{layer}</dt>
+                    <dd className="font-display text-lg font-semibold text-text-primary">{tech}</dd>
+                  </div>
+                ))}
+              </dl>
             </div>
           </div>
         </div>
@@ -227,42 +199,40 @@ export function HomePage() {
           title="A real product architecture, not just screens"
           description="NBA Insight is built to show frontend polish, backend boundaries, persistence, service orchestration and practical API integration decisions."
         />
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-6 divide-y divide-rule border-y border-rule">
           {demonstrations.map(({ title, description, icon: Icon }) => (
-            <article
-              key={title}
-              className="rounded-lg border border-white/10 bg-zinc-900/80 p-5 shadow-xl shadow-black/20 transition hover:-translate-y-0.5 hover:border-red-400/50 hover:bg-zinc-900"
-            >
-              <span className="flex size-11 items-center justify-center rounded-lg bg-red-500/15 text-red-300">
-                <Icon className="size-5" aria-hidden="true" />
-              </span>
-              <h3 className="mt-5 text-lg font-semibold text-white">{title}</h3>
-              <p className="mt-2 text-sm leading-6 text-zinc-400">{description}</p>
-            </article>
+            <div key={title} className="grid gap-2 py-5 sm:grid-cols-[260px_1fr] sm:items-start sm:gap-8">
+              <div className="flex items-center gap-3">
+                <Icon className="size-4 shrink-0 text-score-orange" aria-hidden="true" />
+                <h3 className="font-display text-lg font-semibold text-text-primary">{title}</h3>
+              </div>
+              <p className="text-sm leading-6 text-text-secondary">{description}</p>
+            </div>
           ))}
         </div>
       </section>
 
-      <section className="border-y border-white/10 bg-zinc-900/30">
+      <section className="border-y border-rule-paper bg-paper-100">
         <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:px-8">
-          <SectionHeading
-            eyebrow="Data Sources"
-            title="Multiple data layers with clear ownership"
-            description="Each data source has a specific role so the app can keep working even when current-season providers are limited."
-          />
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div>
+            <p className="font-body text-sm text-ledger-ink/85">Data Sources</p>
+            <h2 className="mt-2 font-display text-3xl font-semibold text-ledger-ink">
+              Multiple data layers with clear ownership
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-ledger-ink/85">
+              Each data source has a specific role so the app can keep working even when current-season providers are
+              limited.
+            </p>
+          </div>
+          <div className="divide-y divide-rule-paper border-t border-rule-paper sm:grid sm:grid-cols-2 sm:gap-x-8 sm:divide-y-0 sm:border-t-0">
             {dataSources.map(({ name, detail, icon: Icon }) => (
-              <article key={name} className="rounded-lg border border-white/10 bg-zinc-950/70 p-4">
-                <div className="flex items-start gap-3">
-                  <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-white/[0.06] text-red-300">
-                    <Icon className="size-5" aria-hidden="true" />
-                  </span>
-                  <div>
-                    <h3 className="font-semibold text-white">{name}</h3>
-                    <p className="mt-1 text-sm leading-6 text-zinc-400">{detail}</p>
-                  </div>
+              <div key={name} className="flex items-start gap-3 border-rule-paper py-4 sm:border-t sm:py-5">
+                <Icon className="mt-0.5 size-4 shrink-0 text-ledger-ink" aria-hidden="true" />
+                <div>
+                  <h3 className="font-display text-base font-semibold text-ledger-ink">{name}</h3>
+                  <p className="mt-1 text-sm leading-6 text-ledger-ink/85">{detail}</p>
                 </div>
-              </article>
+              </div>
             ))}
           </div>
         </div>
@@ -275,19 +245,15 @@ export function HomePage() {
           description="The browser stays simple and secure: it talks to Node, while Node coordinates persistence, Python services and external providers."
         />
         <div className="mt-6 overflow-x-auto">
-          <div className="grid min-w-[980px] grid-cols-5 gap-3">
+          <div className="grid min-w-[980px] grid-cols-5 divide-x divide-rule border-y border-rule">
             {architectureNodes.map(({ label, description, icon: Icon }, index) => (
-              <div key={label} className="relative">
-                <article className="h-full rounded-lg border border-white/10 bg-zinc-900/80 p-4 shadow-xl shadow-black/20">
-                  <span className="flex size-11 items-center justify-center rounded-lg bg-white/[0.06] text-red-300">
-                    <Icon className="size-5" aria-hidden="true" />
-                  </span>
-                  <h3 className="mt-4 text-base font-semibold text-white">{label}</h3>
-                  <p className="mt-2 text-xs leading-5 text-zinc-400">{description}</p>
-                </article>
+              <div key={label} className="relative p-4">
+                <Icon className="size-4 text-score-orange" aria-hidden="true" />
+                <h3 className="mt-4 font-display text-base font-semibold text-text-primary">{label}</h3>
+                <p className="mt-2 text-xs leading-5 text-text-secondary">{description}</p>
                 {index < architectureNodes.length - 1 ? (
-                  <div className="absolute right-[-18px] top-1/2 z-10 hidden -translate-y-1/2 text-zinc-600 xl:block">
-                    <ArrowRight className="size-5" aria-hidden="true" />
+                  <div className="absolute -right-3 top-1/2 z-10 hidden -translate-y-1/2 text-text-secondary xl:block">
+                    <ArrowRight className="size-4" aria-hidden="true" />
                   </div>
                 ) : null}
               </div>
@@ -296,18 +262,18 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="border-y border-white/10 bg-zinc-900/30">
+      <section className="border-y border-rule bg-ink-900/40">
         <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:px-8">
           <SectionHeading
             eyebrow="Current Architecture Status"
             title="Ready for staged production deployment"
             description="The frontend can run independently today, while backend services remain isolated for the next cloud deployment phase."
           />
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="divide-y divide-rule border-t border-rule sm:grid sm:grid-cols-2 sm:gap-x-8 sm:divide-y-0 sm:border-t-0">
             {architectureStatus.map((item) => (
-              <div key={item} className="flex items-start gap-3 rounded-lg border border-white/10 bg-zinc-950/70 p-4">
-                <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-emerald-200" aria-hidden="true" />
-                <p className="text-sm leading-6 text-zinc-300">{item}</p>
+              <div key={item} className="flex items-start gap-3 border-rule py-4 sm:border-t sm:py-4">
+                <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-live-cyan" aria-hidden="true" />
+                <p className="text-sm leading-6 text-text-secondary">{item}</p>
               </div>
             ))}
           </div>
@@ -315,18 +281,18 @@ export function HomePage() {
       </section>
 
       <section>
-        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 lg:grid-cols-2 lg:px-8">
+        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-2 lg:px-8">
           <div>
             <SectionHeading
               eyebrow="Current Limitations"
               title="Transparent production constraints"
               description="The project makes realistic tradeoffs around sports data availability while preserving a clean path to production."
             />
-            <div className="mt-5 space-y-3">
+            <div className="mt-5 divide-y divide-rule border-t border-rule">
               {limitations.map((item) => (
-                <div key={item} className="flex items-start gap-3 rounded-lg border border-white/10 bg-zinc-950/70 p-4">
-                  <Lock className="mt-0.5 size-4 shrink-0 text-amber-200" aria-hidden="true" />
-                  <p className="text-sm leading-6 text-zinc-300">{item}</p>
+                <div key={item} className="flex items-start gap-3 py-4">
+                  <Lock className="mt-0.5 size-4 shrink-0 text-text-secondary" aria-hidden="true" />
+                  <p className="text-sm leading-6 text-text-secondary">{item}</p>
                 </div>
               ))}
             </div>
@@ -338,13 +304,11 @@ export function HomePage() {
               title="Next practical milestones"
               description="The next phases would turn the platform into a richer product without changing its core architecture."
             />
-            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            <div className="mt-5 divide-y divide-rule border-t border-rule">
               {roadmap.map((item) => (
-                <div key={item} className="flex items-center gap-3 rounded-lg border border-white/10 bg-zinc-950/70 p-4">
-                  <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-emerald-400/10 text-emerald-200">
-                    <CheckCircle2 className="size-4" aria-hidden="true" />
-                  </span>
-                  <span className="text-sm font-medium text-zinc-200">{item}</span>
+                <div key={item} className="flex items-center gap-3 py-4">
+                  <CheckCircle2 className="size-4 shrink-0 text-live-cyan" aria-hidden="true" />
+                  <span className="text-sm font-medium text-text-primary">{item}</span>
                 </div>
               ))}
             </div>
@@ -353,22 +317,24 @@ export function HomePage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-5 rounded-lg border border-white/10 bg-zinc-900/80 p-6 shadow-xl shadow-black/20 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-5 border-t border-rule pt-8 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm font-semibold text-red-300">Recruiter-friendly walkthrough</p>
-            <h2 className="mt-2 text-2xl font-bold text-white">Start with analytics, then inspect the full app.</h2>
+            <p className="font-body text-sm text-text-secondary">Recruiter-friendly walkthrough</p>
+            <h2 className="mt-2 font-display text-2xl font-semibold text-text-primary">
+              Start with analytics, then inspect the full app.
+            </h2>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row">
             <Link
               to="/analytics"
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-white px-4 text-sm font-semibold text-zinc-950 transition hover:bg-zinc-200"
+              className="inline-flex h-11 items-center justify-center gap-2 bg-score-orange px-4 font-body text-sm font-semibold text-ink-950 transition-colors hover:bg-score-orange/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-live-cyan/60"
             >
               Open Analytics
               <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
             <Link
               to="/teams"
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-white/10 px-4 text-sm font-semibold text-zinc-200 transition hover:bg-white/10 hover:text-white"
+              className="inline-flex h-11 items-center justify-center gap-2 border border-rule px-4 font-body text-sm font-semibold text-text-secondary transition-colors hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-live-cyan/60"
             >
               Browse Teams
               <Users className="size-4" aria-hidden="true" />

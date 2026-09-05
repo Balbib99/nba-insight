@@ -1,4 +1,4 @@
-import { Activity, ArrowRight, Eye, LockKeyhole, Mail, UserRound } from 'lucide-react';
+import { ArrowRight, Eye, LockKeyhole, Mail, UserRound } from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -47,31 +47,31 @@ export function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
-      <section className="relative overflow-hidden border-b border-white/10">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(220,38,38,0.24),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(14,165,233,0.16),_transparent_32%),linear-gradient(135deg,_rgba(24,24,27,0.96),_rgba(9,9,11,1)_68%)]" />
+    <main className="min-h-screen bg-ink-950 text-text-primary">
+      <section className="relative overflow-hidden border-b border-rule">
+        <div
+          className="scorebug-reveal absolute inset-0 bg-[linear-gradient(105deg,transparent_58%,rgba(255,107,26,0.10)_58%,rgba(255,107,26,0.10)_64%,transparent_64%,transparent_82%,rgba(47,211,201,0.06)_82%,rgba(47,211,201,0.06)_86%,transparent_86%)]"
+          aria-hidden="true"
+        />
         <div className="relative mx-auto grid min-h-screen max-w-7xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-center lg:px-8">
           <div>
-            <div className="inline-flex items-center gap-3 rounded-lg border border-red-400/30 bg-red-500/10 px-3 py-2 text-sm font-semibold text-red-100">
-              <Activity className="size-4" aria-hidden="true" />
-              NBA analytics portfolio
-            </div>
-            <h1 className="mt-6 max-w-3xl text-5xl font-bold tracking-normal text-white sm:text-6xl">
+            <p className="text-sm font-medium text-ledger-blue">NBA analytics portfolio</p>
+            <h1 className="mt-4 max-w-3xl font-display text-6xl font-bold leading-[0.95] tracking-tight text-text-primary sm:text-7xl">
               NBA Insight
             </h1>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-zinc-300 sm:text-lg">
+            <p className="mt-5 max-w-2xl text-base leading-7 text-text-secondary sm:text-lg">
               Explore NBA analytics, standings, playoffs, games and player insights.
             </p>
-            <div className="mt-8 grid gap-3 sm:grid-cols-2">
-              <div className="rounded-lg border border-white/10 bg-zinc-900/70 p-4">
-                <p className="font-semibold text-white">Demo Mode</p>
-                <p className="mt-2 text-sm leading-6 text-zinc-400">
+            <div className="mt-8 grid divide-y divide-rule border-t border-rule sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+              <div className="py-4 sm:py-0 sm:pr-6">
+                <p className="font-display text-lg font-semibold text-text-primary">Demo mode</p>
+                <p className="mt-2 text-sm leading-6 text-text-secondary">
                   Open the full portfolio experience immediately, with account storage prepared for a later phase.
                 </p>
               </div>
-              <div className="rounded-lg border border-white/10 bg-zinc-900/70 p-4">
-                <p className="font-semibold text-white">Account Mode</p>
-                <p className="mt-2 text-sm leading-6 text-zinc-400">
+              <div className="py-4 sm:py-0 sm:pl-6">
+                <p className="font-display text-lg font-semibold text-text-primary">Account mode</p>
+                <p className="mt-2 text-sm leading-6 text-text-secondary">
                   Sign in through the NBA Insight backend and keep the session available across refreshes.
                 </p>
               </div>
@@ -79,27 +79,25 @@ export function AuthPage() {
           </div>
 
           <div className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
-            <article className="rounded-lg border border-white/10 bg-zinc-900/85 p-5 shadow-2xl shadow-black/30">
-              <span className="flex size-11 items-center justify-center rounded-lg bg-red-500/15 text-red-200">
-                <Eye className="size-5" aria-hidden="true" />
-              </span>
-              <h2 className="mt-5 text-xl font-semibold text-white">Demo Mode</h2>
-              <p className="mt-3 text-sm leading-6 text-zinc-400">
+            <article className="border border-rule bg-ink-900 p-5">
+              <Eye className="size-5 text-score-orange" aria-hidden="true" />
+              <h2 className="mt-5 font-display text-xl font-semibold text-text-primary">Demo mode</h2>
+              <p className="mt-3 text-sm leading-6 text-text-secondary">
                 Explore the full portfolio demo without creating an account. Favorites will be stored locally in your
                 browser.
               </p>
               <button
                 type="button"
                 onClick={handleDemoMode}
-                className="mt-6 inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-white px-4 text-sm font-semibold text-zinc-950 transition hover:bg-zinc-200"
+                className="mt-6 inline-flex h-11 w-full items-center justify-center gap-2 bg-score-orange px-4 text-sm font-semibold text-ink-950 transition-colors hover:bg-score-orange/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-live-cyan/60"
               >
                 View Demo Mode
                 <ArrowRight className="size-4" aria-hidden="true" />
               </button>
             </article>
 
-            <article className="rounded-lg border border-white/10 bg-zinc-900/85 p-5 shadow-2xl shadow-black/30">
-              <div className="grid grid-cols-2 gap-2 rounded-lg bg-white/[0.04] p-1">
+            <article className="border border-rule bg-ink-900 p-5">
+              <div className="flex border-b border-rule">
                 {(['login', 'register'] as const).map((tab) => (
                   <button
                     key={tab}
@@ -108,11 +106,14 @@ export function AuthPage() {
                       setActiveTab(tab);
                       setError(null);
                     }}
-                    className={`h-10 rounded-lg text-sm font-semibold transition ${
-                      activeTab === tab ? 'bg-white text-zinc-950' : 'text-zinc-300 hover:bg-white/10 hover:text-white'
+                    className={`relative h-10 flex-1 font-body text-sm font-semibold transition-colors ${
+                      activeTab === tab ? 'text-text-primary' : 'text-text-secondary hover:text-text-primary'
                     }`}
                   >
                     {tab === 'login' ? 'Login' : 'Register'}
+                    {activeTab === tab ? (
+                      <span className="absolute inset-x-0 -bottom-px h-[2px] bg-score-orange" aria-hidden="true" />
+                    ) : null}
                   </button>
                 ))}
               </div>
@@ -120,16 +121,16 @@ export function AuthPage() {
               <form className="mt-5 space-y-4" onSubmit={(event) => void handleSubmit(event)}>
                 {isRegister ? (
                   <label className="block">
-                    <span className="text-sm font-medium text-zinc-200">Name</span>
-                    <span className="mt-2 flex h-11 items-center gap-2 rounded-lg border border-white/10 bg-zinc-950/70 px-3 focus-within:border-red-300">
-                      <UserRound className="size-4 text-zinc-500" aria-hidden="true" />
+                    <span className="text-sm font-medium text-text-secondary">Name</span>
+                    <span className="mt-2 flex h-11 items-center gap-2 border border-rule bg-ink-950 px-3 focus-within:border-live-cyan/60">
+                      <UserRound className="size-4 text-text-secondary" aria-hidden="true" />
                       <input
                         value={name}
                         onChange={(event) => setName(event.target.value)}
                         required
                         minLength={2}
                         autoComplete="name"
-                        className="h-full min-w-0 flex-1 bg-transparent text-sm text-white outline-none placeholder:text-zinc-600"
+                        className="h-full min-w-0 flex-1 bg-transparent text-sm text-text-primary outline-none placeholder:text-text-secondary/60"
                         placeholder="Your name"
                       />
                     </span>
@@ -137,25 +138,25 @@ export function AuthPage() {
                 ) : null}
 
                 <label className="block">
-                  <span className="text-sm font-medium text-zinc-200">Email</span>
-                  <span className="mt-2 flex h-11 items-center gap-2 rounded-lg border border-white/10 bg-zinc-950/70 px-3 focus-within:border-red-300">
-                    <Mail className="size-4 text-zinc-500" aria-hidden="true" />
+                  <span className="text-sm font-medium text-text-secondary">Email</span>
+                  <span className="mt-2 flex h-11 items-center gap-2 border border-rule bg-ink-950 px-3 focus-within:border-live-cyan/60">
+                    <Mail className="size-4 text-text-secondary" aria-hidden="true" />
                     <input
                       type="email"
                       value={email}
                       onChange={(event) => setEmail(event.target.value)}
                       required
                       autoComplete="email"
-                      className="h-full min-w-0 flex-1 bg-transparent text-sm text-white outline-none placeholder:text-zinc-600"
+                      className="h-full min-w-0 flex-1 bg-transparent text-sm text-text-primary outline-none placeholder:text-text-secondary/60"
                       placeholder="you@example.com"
                     />
                   </span>
                 </label>
 
                 <label className="block">
-                  <span className="text-sm font-medium text-zinc-200">Password</span>
-                  <span className="mt-2 flex h-11 items-center gap-2 rounded-lg border border-white/10 bg-zinc-950/70 px-3 focus-within:border-red-300">
-                    <LockKeyhole className="size-4 text-zinc-500" aria-hidden="true" />
+                  <span className="text-sm font-medium text-text-secondary">Password</span>
+                  <span className="mt-2 flex h-11 items-center gap-2 border border-rule bg-ink-950 px-3 focus-within:border-live-cyan/60">
+                    <LockKeyhole className="size-4 text-text-secondary" aria-hidden="true" />
                     <input
                       type="password"
                       value={password}
@@ -163,22 +164,20 @@ export function AuthPage() {
                       required
                       minLength={6}
                       autoComplete={isRegister ? 'new-password' : 'current-password'}
-                      className="h-full min-w-0 flex-1 bg-transparent text-sm text-white outline-none placeholder:text-zinc-600"
+                      className="h-full min-w-0 flex-1 bg-transparent text-sm text-text-primary outline-none placeholder:text-text-secondary/60"
                       placeholder="Password"
                     />
                   </span>
                 </label>
 
                 {error ? (
-                  <p className="rounded-lg border border-red-400/30 bg-red-500/10 px-3 py-2 text-sm text-red-100">
-                    {error}
-                  </p>
+                  <p className="border border-down/30 bg-down/10 px-3 py-2 text-sm text-text-primary">{error}</p>
                 ) : null}
 
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-red-600 px-4 text-sm font-semibold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-70"
+                  className="inline-flex h-11 w-full items-center justify-center gap-2 bg-score-orange px-4 text-sm font-semibold text-ink-950 transition-colors hover:bg-score-orange/90 disabled:cursor-not-allowed disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-live-cyan/60"
                 >
                   {isSubmitting ? 'Working...' : isRegister ? 'Create Account' : 'Log In'}
                   <ArrowRight className="size-4" aria-hidden="true" />
@@ -188,6 +187,6 @@ export function AuthPage() {
           </div>
         </div>
       </section>
-    </div>
+    </main>
   );
 }

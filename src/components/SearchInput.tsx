@@ -11,17 +11,17 @@ interface SearchInputProps {
 export function SearchInput({ id, label, placeholder, value, onChange }: SearchInputProps) {
   return (
     <div className="w-full">
-      <label htmlFor={id} className="mb-2 block text-sm font-medium text-zinc-300">
+      <label htmlFor={id} className="mb-2 block text-sm font-medium text-text-secondary">
         {label}
       </label>
       <div className="relative">
         <Search
-          className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zinc-500"
+          className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-text-secondary"
           aria-hidden="true"
         />
         <input
           id={id}
-          className="h-11 w-full rounded-lg border border-white/10 bg-zinc-950/80 px-10 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-red-400/70 focus:ring-2 focus:ring-red-500/20"
+          className="h-11 w-full border border-rule bg-ink-950 px-10 text-sm text-text-primary outline-none transition-colors placeholder:text-text-secondary/60 focus:border-live-cyan/60 focus:ring-2 focus:ring-live-cyan/20"
           placeholder={placeholder}
           type="search"
           value={value}
@@ -29,7 +29,7 @@ export function SearchInput({ id, label, placeholder, value, onChange }: SearchI
         />
         {value ? (
           <button
-            className="absolute right-2 top-1/2 flex size-7 -translate-y-1/2 items-center justify-center rounded-lg text-zinc-400 transition hover:bg-white/10 hover:text-white"
+            className="absolute right-2 top-1/2 flex size-7 -translate-y-1/2 items-center justify-center text-text-secondary transition-colors hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-live-cyan/60"
             type="button"
             aria-label="Clear search"
             title="Clear search"

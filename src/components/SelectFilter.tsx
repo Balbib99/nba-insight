@@ -16,13 +16,13 @@ interface SelectFilterProps {
 export function SelectFilter({ id, label, value, options, onChange }: SelectFilterProps) {
   return (
     <div className="w-full">
-      <label htmlFor={id} className="mb-2 block text-sm font-medium text-zinc-300">
+      <label htmlFor={id} className="mb-2 block text-sm font-medium text-text-secondary">
         {label}
       </label>
       <div className="relative">
         <select
           id={id}
-          className="h-11 w-full appearance-none rounded-lg border border-white/10 bg-zinc-950/80 px-3 pr-10 text-sm text-white outline-none transition focus:border-red-400/70 focus:ring-2 focus:ring-red-500/20"
+          className="h-11 w-full appearance-none border border-rule bg-ink-950 px-3 pr-10 text-sm text-text-primary outline-none transition-colors focus:border-live-cyan/60 focus:ring-2 focus:ring-live-cyan/20"
           value={value}
           onChange={(event) => onChange(event.target.value)}
         >
@@ -33,7 +33,7 @@ export function SelectFilter({ id, label, value, options, onChange }: SelectFilt
           ))}
         </select>
         <ChevronDown
-          className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-zinc-500"
+          className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-text-secondary"
           aria-hidden="true"
         />
       </div>
